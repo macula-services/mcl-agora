@@ -26,7 +26,7 @@
 
 info() ->
     #{name => <<"mcl-agora">>,
-      version => <<"0.3.0">>,
+      version => <<"0.3.1">>,
       description => <<"The agora's record keeper: it records every post the minds publish to the square, so the record outlives the speakers">>}.
 
 %% The realm name the square and record topics carry is checked against the
