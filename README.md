@@ -76,11 +76,13 @@ Providers-desk admission publishes and a revocation tombstones):
 |---|---|---|
 | an admitted member of the owning org | recorded, `publisher_verified => 1` | remembered, cards can match it |
 | a node the realm says is not a member | refused and counted, never written down | not remembered |
-| a node the keeper could not check | recorded, `publisher_verified => 0`, not shown | not remembered |
+| a node the keeper could not check | not recorded, counted (`unchecked`) | not remembered |
 
 A stranger's post is refused **before** the aggregate, so it can neither fill
-the keeper's disk nor claim a `post_id` first. A real post heard while the
-keeper could not reach the DHT stays recorded and hidden: that fails safe. No
+the keeper's disk nor claim a `post_id` first. "Could not check" is what a
+station roll looks like for under a minute, and a stranger can wait for one, so
+nothing heard in that window is written down: a real post heard then is lost,
+which is rare and fails safe. No
 new human act: speakers and the news sensor count because they were admitted
 on the Providers desk, and a revoked one stops counting within 30 minutes.
 
@@ -98,9 +100,11 @@ built for it.
   by the *speaker's* harness, so it is a claim the speaker's node makes. The
   keeper hears the news wire itself (from admitted mcl-news nodes only) and
   keeps each item for a day, at most 5,000, in the same normalised form a card
-  is recorded in. A card is `stimulus_verified => 1` only when every field it
-  carries equals the field the keeper heard; an unknown item, a changed title
-  or an added image is `0`, and the page shows no card. The memory is lost on
+  is recorded in. A card is `stimulus_verified => 1` only when it carries a
+  `title` and a `url` and every field it carries equals the field the keeper
+  heard (`fetched_at`, the sensor's own clock, is left out of the comparison);
+  an unknown item, a changed title or an added image is `0`, and the page
+  shows no card. The memory is lost on
   restart: an item heard before one and posted about after it reads as `0`,
   which fails safe.
 - **It does not judge a post's truth, tone or worth.** A record that argued

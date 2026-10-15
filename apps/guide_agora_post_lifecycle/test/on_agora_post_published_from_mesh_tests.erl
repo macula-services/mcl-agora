@@ -90,13 +90,13 @@ a_speaker_is_recorded_as_verified_test() ->
                       ?assertMatch(#{publisher_verified := 1}, dispatched())
                   end).
 
-%% Could not find out is not a refusal: the post is written down, marked
-%% unchecked, and the page does not show it.
-a_speaker_that_could_not_be_checked_is_recorded_as_unchecked_test() ->
-    with_dispatch({ok, 1, [event()]}, {error, {unavailable, timeout}},
+%% Could not find out is what a station roll looks like, and a stranger can
+%% wait for one: nothing heard in that window is written down, only counted.
+a_publisher_that_could_not_be_checked_is_never_dispatched_test() ->
+    with_dispatch({ok, 1, [event()]}, {error, {unavailable, {org_directory, not_found}}},
                   fun() ->
-                      ?assertEqual(counts(#{recorded => 1}), state(heard())),
-                      ?assertMatch(#{publisher_verified := 0}, dispatched())
+                      ?assertEqual(counts(#{unchecked => 1}), state(heard())),
+                      ?assertEqual(0, meck:num_calls(maybe_record_agora_post, dispatch, 1))
                   end).
 
 %% The speaker is asked about by the org that owns the square, and the identity
@@ -151,7 +151,8 @@ heard() ->
 fresh() -> counts(#{}).
 
 counts(Overrides) ->
-    maps:merge(#{recorded => 0, duplicates => 0, refused => 0, not_a_speaker => 0, conflicts => 0},
+    maps:merge(#{recorded => 0, duplicates => 0, refused => 0, not_a_speaker => 0, unchecked => 0,
+                 conflicts => 0},
                Overrides).
 
 state({noreply, State}) -> State.

@@ -16,9 +16,13 @@
 %%%                        cannot fill the keeper's disk, and because this is
 %%%                        decided before the aggregate, cannot claim a post_id
 %%%                        first either
-%%%   could not find out   recorded with `publisher_verified => 0', which the
-%%%                        page does not show; a real post heard during a
-%%%                        lookup failure stays hidden, which fails safe
+%%%   could not find out   NOT recorded, counted as `unchecked'. Never stored:
+%%%                        "could not find out" is what a station roll looks
+%%%                        like, and a stranger can wait for one or cause one,
+%%%                        so recording in that window would hand a stranger
+%%%                        the store, the newest page and a real post's stream.
+%%%                        A real post heard in that window is lost, which is
+%%%                        rare (a roll lasts under a minute) and fails safe
 %%%
 %%% WHETHER THE CARD IS REAL IS DECIDED HERE TOO, once, at the moment the post
 %%% is heard: `stimulus_verified' is 1 only when the card matches the item the
@@ -51,7 +55,8 @@
 %% answerable at all, and the tests read it, which is why the three paths
 %% above are pinned rather than merely exercised.
 init(_Args) ->
-    {ok, #{recorded => 0, duplicates => 0, refused => 0, not_a_speaker => 0, conflicts => 0}}.
+    {ok, #{recorded => 0, duplicates => 0, refused => 0, not_a_speaker => 0, unchecked => 0,
+           conflicts => 0}}.
 
 -spec handle_event(binary(), term(), map(), map()) -> {noreply, map()}.
 handle_event(_Topic, Payload, Meta, State) when is_map(Payload), is_map(Meta) ->
@@ -73,8 +78,8 @@ attributed(_Unverified, _Payload) ->
 
 spoken({ok, _ExpiresAt}, Payload, Publisher) ->
     judged(agora_post_fact:decode(Payload, Publisher), 1);
-spoken({error, {unavailable, _}}, Payload, Publisher) ->
-    judged(agora_post_fact:decode(Payload, Publisher), 0);
+spoken({error, {unavailable, _}}, _Payload, _Publisher) ->
+    unchecked;
 spoken({error, {not_a_member, _}}, _Payload, _Publisher) ->
     not_a_speaker.
 
@@ -93,6 +98,8 @@ heard({ok, Command}, State) ->
     recorded(maybe_record_agora_post:dispatch(Command), State);
 heard(not_a_speaker, State) ->
     tally(not_a_speaker, State);
+heard(unchecked, State) ->
+    tally(unchecked, State);
 heard({error, Reason}, State) ->
     warning(Reason, State).
 

@@ -51,10 +51,17 @@ kept(_NoItemId, _Raw) ->
 %% @doc 1 when every field of `Card' equals the same field of `Heard', the item
 %% as the keeper heard mcl-news report it; 0 otherwise, including when the
 %% keeper never heard the item. Both are this module's normalised form.
+%%
+%% A card must carry a `title' and a `url' to be verified at all: a card that
+%% says nothing a reader can see or follow is not one worth vouching for.
+%% `fetched_at' is the sensor's own clock, not the news: mcl-news reports an
+%% item again with a new one once it leaves its window, so it is left out of
+%% the comparison rather than making a card for the earlier report read 0.
 -spec verified(map(), map() | undefined) -> 0 | 1.
-verified(Card, Heard) when is_map(Card), is_map(Heard) ->
-    matched(maps:with(maps:keys(Card), Heard) =:= Card);
-verified(_Card, _NeverHeard) ->
+verified(#{title := _, url := _} = Card, Heard) when is_map(Heard) ->
+    Compared = maps:remove(fetched_at, Card),
+    matched(maps:with(maps:keys(Compared), Heard) =:= Compared);
+verified(_CardWithoutTitleOrUrl, _HeardOrNever) ->
     0.
 
 matched(true)  -> 1;

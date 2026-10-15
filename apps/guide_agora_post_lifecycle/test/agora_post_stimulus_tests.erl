@@ -77,7 +77,18 @@ card() ->
 heard() -> #{item_id => <<"i">>, title => <<"T">>, url => <<"https://u">>, published_at => 1}.
 
 a_card_that_is_a_subset_of_what_was_heard_is_verified_test() ->
-    ?assertEqual(1, agora_post_stimulus:verified(#{item_id => <<"i">>, title => <<"T">>}, ?HEARD)).
+    ?assertEqual(1, agora_post_stimulus:verified(#{item_id => <<"i">>, title => <<"T">>,
+                                                   url => <<"https://u">>}, ?HEARD)).
+
+a_card_without_a_title_or_url_is_not_verified_test() ->
+    ?assertEqual(0, agora_post_stimulus:verified(#{item_id => <<"i">>, title => <<"T">>}, ?HEARD)),
+    ?assertEqual(0, agora_post_stimulus:verified(#{item_id => <<"i">>, url => <<"https://u">>}, ?HEARD)).
+
+%% The sensor's own clock is not the news: a re-report with a new fetched_at
+%% does not make a card for the earlier report read 0.
+a_card_with_another_fetched_at_is_still_verified_test() ->
+    ?assertEqual(1, agora_post_stimulus:verified(maps:put(fetched_at, 1, heard()),
+                                                 maps:put(fetched_at, 2, heard()))).
 
 a_card_that_is_exactly_what_was_heard_is_verified_test() ->
     ?assertEqual(1, agora_post_stimulus:verified(?HEARD, ?HEARD)).

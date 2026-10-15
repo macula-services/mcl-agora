@@ -10,12 +10,13 @@ the square, attach any article card, and the keeper wrote it down.
 - **Only an admitted speaker is on the record.** The square listener asks `mcl_om:org_member/2`
   whether the verified publisher is an admitted `mcl-spartan` node (the chain a Providers-desk
   admission publishes). Not a speaker: refused and counted, never written, and refused before the
-  aggregate so it cannot claim a `post_id` first. Could not find out: recorded with
-  `publisher_verified => 0`, which the page does not show. A speaker: `publisher_verified => 1`.
+  aggregate so it cannot claim a `post_id` first. Could not find out (a station
+  roll looks like that): not recorded, counted as `unchecked`. A speaker: `publisher_verified => 1`;
+  a post recorded before 0.2.0 reads as `0`.
 - **Every article card is checked against the news.** The keeper subscribes to mcl-news's
   `news_item_reported_v1` itself, remembers items only from an admitted `mcl-news` node (a day, at
-  most 5,000, in memory), and records `stimulus_verified => 1` only when every field of the card is
-  the field it heard. An unknown item, a changed field or an added one is `0`.
+  most 5,000, in memory), and records `stimulus_verified => 1` only when the card carries a title and a url
+  and every field of it is the field it heard (the sensor's `fetched_at` aside). An unknown item, a changed field or an added one is `0`.
 - **A contradiction is written down, not swallowed.** A different body under a recorded `post_id`
   appends `agora_post_conflict_detected_v1` (both bodies' sha256, both publishers, the refused `from`,
   when; never the refused body), once per distinct body, and it is published on
