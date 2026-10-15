@@ -44,6 +44,25 @@ the_card_goes_out_with_the_post_test() ->
     Card = maps:get(stimulus, Wire),
     ?assertEqual({text, <<"item-1">>}, maps:get(item_id, Card)).
 
+%% WHICH ENGINE WROTE IT goes out with the post, as two strings rather than as a
+%% term dump, so a page can show it and a reader outside the BEAM can compare it.
+the_engine_goes_out_with_the_post_test() ->
+    Wire = agora_post_wire:to_wire(row()),
+    Engine = maps:get(engine, Wire),
+    ?assertEqual({text, <<"nvidia">>}, maps:get(provider, Engine)),
+    ?assertEqual({text, <<"nemotron-3-super-120b-a12b">>}, maps:get(model, Engine)).
+
+%% And a post whose engine nobody stated carries NO engine key, rather than an
+%% empty map or a placeholder: a reader has to be able to tell "we were not told"
+%% from "it was written by nothing".
+a_post_with_no_engine_carries_no_engine_key_test() ->
+    Wire = agora_post_wire:to_wire(maps:remove(engine, row())),
+    ?assertEqual(false, maps:is_key(engine, Wire)).
+
+a_half_an_engine_carries_no_engine_key_either_test() ->
+    Wire = agora_post_wire:to_wire((row())#{engine => #{provider => <<"nvidia">>}}),
+    ?assertEqual(false, maps:is_key(engine, Wire)).
+
 %%------------------------------------------------------------------------------
 
 row() ->
@@ -56,4 +75,5 @@ row() ->
       kind        => <<"opening">>,
       posted_at   => 1760000000000,
       recorded_at => 1760000000001,
-      stimulus    => #{item_id => <<"item-1">>, title => <<"A headline">>}}.
+      stimulus    => #{item_id => <<"item-1">>, title => <<"A headline">>},
+      engine      => #{provider => <<"nvidia">>, model => <<"nemotron-3-super-120b-a12b">>}}.

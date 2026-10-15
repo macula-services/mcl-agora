@@ -43,6 +43,7 @@
     kind       :: binary() | undefined,
     posted_at  :: integer(),
     stimulus   :: map() | undefined,
+    engine     :: map() | undefined,
     publisher_verified :: 0 | 1,
     stimulus_verified  :: 0 | 1 | undefined
 }).
@@ -71,6 +72,7 @@ new(#{post_id := Id, from := From, publisher := Publisher, body := Body,
                                kind = optional(Params, kind),
                                posted_at = At,
                                stimulus = optional_map(Params, stimulus),
+                               engine = optional_map(Params, engine),
                                publisher_verified = verdict(Params, publisher_verified, 0),
                                stimulus_verified = verdict(Params, stimulus_verified, undefined)}};
 new(Params) when is_map(Params) ->
@@ -135,6 +137,7 @@ to_map(#record_agora_post_v1{} = Cmd) ->
       kind         => Cmd#record_agora_post_v1.kind,
       posted_at    => Cmd#record_agora_post_v1.posted_at,
       stimulus     => Cmd#record_agora_post_v1.stimulus,
+      engine       => Cmd#record_agora_post_v1.engine,
       publisher_verified => Cmd#record_agora_post_v1.publisher_verified,
       stimulus_verified  => Cmd#record_agora_post_v1.stimulus_verified}.
 

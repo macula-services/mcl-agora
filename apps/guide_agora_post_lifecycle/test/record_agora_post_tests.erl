@@ -57,6 +57,24 @@ a_command_round_trips_through_its_map_test() ->
     ?assertEqual(Map, record_agora_post_v1:to_map(Again)),
     ?assertEqual(record_agora_post_v1:post_id(Cmd), record_agora_post_v1:post_id(Again)).
 
+%% WHICH ENGINE WROTE IT survives the command and reaches the event. This is the
+%% path a reboot rebuilds the whole record from, so a field that did not
+%% round-trip would be there on a live post and gone after a restart.
+the_engine_travels_from_the_command_to_the_event_test() ->
+    Engine = #{provider => <<"nvidia">>, model => <<"nemotron-3-super-120b-a12b">>},
+    {ok, Cmd} = new(#{engine => Engine}),
+    {ok, [EventMap]} = maybe_record_agora_post:handle(Cmd),
+    ?assertEqual(Engine, maps:get(engine, EventMap)),
+    {ok, Again} = record_agora_post_v1:from_map(record_agora_post_v1:to_map(Cmd)),
+    ?assertEqual(Engine, maps:get(engine, record_agora_post_v1:to_map(Again))).
+
+%% A post whose engine nobody stated is still a post, and its event says nothing
+%% about one rather than saying something empty.
+a_command_with_no_engine_carries_none_to_the_event_test() ->
+    {ok, Cmd} = new(#{}),
+    {ok, [EventMap]} = maybe_record_agora_post:handle(Cmd),
+    ?assertEqual(undefined, maps:get(engine, EventMap)).
+
 %%------------------------------------------------------------------------------
 
 new(Overrides) ->

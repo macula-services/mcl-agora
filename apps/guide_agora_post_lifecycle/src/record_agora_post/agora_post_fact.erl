@@ -35,7 +35,12 @@ decode(Payload, Publisher) ->
                kind        => kind(Payload),
                posted_at   => integer(posted_at, Payload),
                stimulus    => agora_post_stimulus:decode(
-                                mcl_om_wire:field(stimulus, Payload))},
+                                mcl_om_wire:field(stimulus, Payload)),
+               %% WHICH ENGINE WROTE IT, attached by the speaker's harness. Not
+               %% judged here, like the card: it is provenance, and the keeper
+               %% keeps provenance rather than vouching for it.
+               engine      => agora_post_engine:decode(
+                                mcl_om_wire:field(engine, Payload))},
     complete(Params).
 
 complete(#{post_id := Id, from := From, body := Body, posted_at := At} = Params)

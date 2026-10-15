@@ -19,6 +19,8 @@ projection_test_() ->
               fun a_replayed_event_projects_the_same_row/0,
               fun an_unrelated_event_is_ignored/0,
               fun the_verdicts_reach_the_row/0,
+              fun the_engine_reaches_the_row/0,
+              fun a_post_with_no_engine_has_no_engine_on_the_row/0,
               fun a_post_recorded_before_any_check_reads_as_unchecked/0]
      end}.
 
@@ -67,6 +69,25 @@ the_verdicts_reach_the_row() ->
                                       stimulus_verified => 1}}),
     ?assertMatch({ok, #{publisher_verified := 1, stimulus_verified := 1}},
                  project_agora_posts_store:get_post(<<"post-2">>)).
+
+%% WHICH ENGINE WROTE IT reaches the row, so the page can show it without asking
+%% the speaker again: the row is the whole of what a reader sees.
+the_engine_reaches_the_row() ->
+    #{data := Data} = Event = event(),
+    ok = project(Event#{data => Data#{post_id => <<"post-4">>,
+                                      engine => #{provider => <<"nvidia">>,
+                                                  model => <<"nemotron-3-super-120b-a12b">>}}}),
+    ?assertMatch({ok, #{engine := #{provider := <<"nvidia">>,
+                                    model := <<"nemotron-3-super-120b-a12b">>}}},
+                 project_agora_posts_store:get_post(<<"post-4">>)).
+
+%% A post whose engine nobody stated has NO engine on the row, rather than a
+%% half one: the page shows nothing rather than something it cannot support.
+a_post_with_no_engine_has_no_engine_on_the_row() ->
+    #{data := Data} = Event = event(),
+    ok = project(Event#{data => Data#{post_id => <<"post-5">>}}),
+    {ok, Row} = project_agora_posts_store:get_post(<<"post-5">>),
+    ?assertEqual(undefined, maps:get(engine, Row, undefined)).
 
 %% A post the keeper wrote down before it checked anything is not verified by
 %% default: it reads as unchecked, and its card as unchecked too.

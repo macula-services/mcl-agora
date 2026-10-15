@@ -37,6 +37,7 @@
     posted_at   :: integer(),
     recorded_at :: integer(),
     stimulus    :: map() | undefined,
+    engine      :: map() | undefined,
     publisher_verified :: 0 | 1,
     stimulus_verified  :: 0 | 1 | undefined
 }).
@@ -59,6 +60,7 @@ new(#{post_id := Id, from := From, publisher := Publisher, body := Body,
                             posted_at = At,
                             recorded_at = erlang:system_time(millisecond),
                             stimulus = optional_map(Fields, stimulus),
+                            engine = optional_map(Fields, engine),
                             publisher_verified = maps:get(publisher_verified, Fields, 0),
                             stimulus_verified = maps:get(stimulus_verified, Fields, undefined)}.
 
@@ -91,6 +93,7 @@ to_map(#agora_post_recorded_v1{} = E) ->
       posted_at   => E#agora_post_recorded_v1.posted_at,
       recorded_at => E#agora_post_recorded_v1.recorded_at,
       stimulus    => E#agora_post_recorded_v1.stimulus,
+      engine      => E#agora_post_recorded_v1.engine,
       publisher_verified => E#agora_post_recorded_v1.publisher_verified,
       stimulus_verified  => E#agora_post_recorded_v1.stimulus_verified}.
 

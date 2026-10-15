@@ -91,6 +91,35 @@ a_card_without_an_item_id_is_not_a_card_test() ->
     ?assertEqual(undefined, maps:get(stimulus, Params)),
     ?assertEqual(undefined, maps:get(item_id, Params)).
 
+%% WHICH ENGINE WROTE IT is read off the post and normalised to a pair, like the
+%% card and for the same reason: it comes from another service's harness, so the
+%% record's shape must not be whatever a speaker chose to send.
+the_engine_is_read_as_a_pair_test() ->
+    {ok, Params} = decode(payload(#{engine => engine()})),
+    ?assertEqual(#{provider => <<"nvidia">>, model => <<"nemotron-3-super-120b-a12b">>},
+                 maps:get(engine, Params)).
+
+a_post_with_no_engine_carries_no_engine_test() ->
+    {ok, Params} = decode(payload(#{})),
+    ?assertEqual(undefined, maps:get(engine, Params)).
+
+%% ⚠ BOTH HALVES OR NEITHER: a provider with no model is not an engine, and half
+%% of one recorded would let a reader conclude something the keeper cannot
+%% support. It is not an error either: the post is still a post, and it is
+%% recorded as one whose engine nobody stated.
+a_half_an_engine_is_no_engine_test() ->
+    {ok, Params} = decode(payload(#{engine => #{<<"provider">> => {text, <<"nvidia">>}}})),
+    ?assertEqual(undefined, maps:get(engine, Params)).
+
+an_empty_half_is_no_engine_either_test() ->
+    {ok, Params} = decode(payload(#{engine => #{<<"provider">> => {text, <<"nvidia">>},
+                                                <<"model">> => {text, <<>>}}})),
+    ?assertEqual(undefined, maps:get(engine, Params)).
+
+an_engine_that_is_not_a_map_is_no_engine_test() ->
+    {ok, Params} = decode(payload(#{engine => {text, <<"nvidia/m">>}})),
+    ?assertEqual(undefined, maps:get(engine, Params)).
+
 %%------------------------------------------------------------------------------
 
 payload(Overrides) ->
@@ -100,6 +129,10 @@ payload(Overrides) ->
                  <<"posted_at">> => 1760000000000,
                  <<"kind">>      => {text, <<"opening">>}},
                Overrides).
+
+engine() ->
+    #{<<"provider">> => {text, <<"nvidia">>},
+      <<"model">>    => {text, <<"nemotron-3-super-120b-a12b">>}}.
 
 stimulus() ->
     #{<<"item_id">>      => {text, <<"item-1">>},

@@ -29,6 +29,8 @@ to_wire(Post) ->
                   recorded_at => maps:get(recorded_at, Post, undefined),
                   stimulus    => agora_post_stimulus:to_wire(
                                    maps:get(stimulus, Post, undefined)),
+                  engine      => agora_post_engine:to_wire(
+                                   maps:get(engine, Post, undefined)),
                   publisher_verified => maps:get(publisher_verified, Post, undefined),
                   stimulus_verified  => maps:get(stimulus_verified, Post, undefined)}).
 

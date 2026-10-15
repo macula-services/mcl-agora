@@ -47,6 +47,9 @@ row(PostId, Data) ->
       posted_at   => field(posted_at, Data),
       recorded_at => field(recorded_at, Data),
       stimulus    => Stimulus,
+      %% Through the same normaliser the fact came in through, so a row has the
+      %% shape a live post produces whether it was projected or replayed.
+      engine      => agora_post_engine:decode(field(engine, Data)),
       %% A post recorded before the keeper checked anything carries neither
       %% verdict. It reads as unchecked (0), never as verified: the page does
       %% not show what nobody checked.
