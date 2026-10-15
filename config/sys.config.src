@@ -1,0 +1,103 @@
+%% Substituted by relx at boot; every ${VAR} must resolve or the node will not
+%% start with a malformed term. That is the correct failure: a service with a
+%% half-configured realm announces itself where nobody can attribute it, which
+%% looks exactly like a healthy node.
+[
+    {guide_agora_post_lifecycle, [
+        %% The realm NAME the square and record topics carry (io.macula);
+        %% MCL_REALM is its sha256 tag. The service refuses to start unless they
+        %% agree: a keeper listening on a topic nobody publishes to looks
+        %% exactly like a quiet square.
+        {realm_name, "${MCL_REALM_NAME}"}
+    ]},
+    {mcl_om, [
+        %% Without this, mcl_om_identity:load_node_key/0 returns `undefined'
+        %% forever and identity_key/0 stays {error, no_identity_key} -- a
+        %% service that declares a handler-bearing capability() then silently
+        %% never advertises it, on every republish tick, permanently ("an
+        %% ephemeral service cannot sign and is correctly not advertised",
+        %% mcl_om_capabilities's own moduledoc). Point it at the mounted secrets
+        %% volume.
+        {identity_key_path, "/etc/mcl/secrets/identity.key"},
+        %% /health on a Unix socket, not a port (mcl_om 0.39): the image's
+        %% HEALTHCHECK reaches it with curl --unix-socket. A service on 0.39
+        %% takes no health port from the fleet's registry.
+        {health_socket,     "/run/mcl/health.sock"},
+        {capability_topic,  <<"_mesh.cap.">>},
+        %% The org get_posts_page is served under: `mcl-agora/get_posts_page'.
+        %% One org per service, named after the repo. The realm must have
+        %% granted THIS node a provider authorization for it (D25), or nothing
+        %% is advertised and /health says so.
+        %%
+        %% NOTE WHAT IS NOT HERE: there is no org for the square. The keeper
+        %% asks the realm for no authority to publish into it, which is what
+        %% makes "the keeper cannot put words in the square" structural rather
+        %% than a promise.
+        {org,               <<"mcl-agora">>},
+        %% THE REALM IS AN APPLICATION ENV, NOT A SHELL VARIABLE, and this file
+        %% is the only place the two meet. mcl_om_identity:realm() reads
+        %% application:get_env(mcl_om, realm); exporting MCL_REALM in the shell
+        %% and expecting that to be enough has cost a sibling service an hour,
+        %% because nothing translates between the two by itself.
+        {realm,             <<"${MCL_REALM}">>},
+        %% ⚠ THE TRUST ANCHOR, AND IT IS NOT OPTIONAL. MCL_REALM above is an
+        %% IDENTIFIER (sha256 of the realm name); this is the realm's public
+        %% SIGNING KEY, 64-hex-per-32-bytes, as carried. mcl_om decodes it and
+        %% pins it as macula:connect/2's `realm_trust'.
+        %%
+        %% Without it every org-namespaced advertisement this service resolves
+        %% is refused with `no_realm_key', direct dial answers `{unresolved,
+        %% no_trusted_advertisement}', and the boot claim never reaches the
+        %% realm: no pending row, no delegation, nothing callable. The node
+        %% stays green and answers /health throughout, which is why mcl_om
+        %% refuses to start a pool without it rather than letting a service
+        %% look healthy and be unreachable.
+        %%
+        %% Public material. It is the half everyone verifies against, not a
+        %% secret, and it does not belong in the secrets volume.
+        {realm_key,         <<"${MCL_REALM_KEY}">>}
+    ]},
+    %% ==========================================================================
+    %% THE PQ CRYPTO PROFILE, WITHOUT WHICH THIS NODE DOES NOT PEER
+    %% ==========================================================================
+    %%
+    %% ⚠ MANDATORY. The macula app starts before the service reads anything, and
+    %% without this block it boots on the classical profile while every PQ
+    %% station closes the CONNECT/HELLO handshake as puzzle_invalid -- forever,
+    %% silently. The client model: a puzzle-8 identity key (generated and
+    %% persisted by mcl_om_identity when the path above is missing) and the
+    %% pq_hybrid crypto profile every wire signature is checked under. mcl_om is
+    %% a library; each service's own release carries this.
+    %%
+    %% ⚠ NO `puzzle_difficulty' HERE. macula 12 (D30) makes it one constant for
+    %% the fleet, `macula_node_keys:puzzle_difficulty()', and REFUSES a
+    %% `{macula, puzzle_difficulty, _}' setting at application start whatever
+    %% the value: a node that set one would believe it had chosen a difficulty
+    %% that nothing reads.
+    {macula, [
+        {crypto_profile, pq_hybrid}
+    ]},
+    %% ==========================================================================
+    %% EVOQ'S ADAPTER, WITHOUT WHICH THIS NODE DOES NOT BOOT
+    %% ==========================================================================
+    %%
+    %% ⚠ MANDATORY BECAUSE THIS SERVICE OWNS A STORE. mcl_agora_app starts it AND
+    %% a per-store evoq subscription (mcl_agora_store), and that subscription
+    %% reads the global log through evoq, which crashes on
+    %% `{not_configured, event_store_adapter}' if this block is absent. evoq
+    %% starts as a release-boot application before any service's `start/2' runs,
+    %% so nothing can inject it at runtime.
+    %%
+    %% A sibling service put two of three fleet nodes into a boot-crash loop for
+    %% want of this block.
+    {evoq, [
+        {event_store_adapter,    reckon_evoq_adapter},
+        {subscription_adapter,   reckon_evoq_adapter},
+        {snapshot_store_adapter, reckon_evoq_adapter},
+        %% A fallback evoq resolves before it knows whether anything dispatches a
+        %% command. It must name the SAME store as event_store/0's id, and a
+        %% test compares the two.
+        {store_id,               mcl_agora_store}
+    ]},
+    {kernel, [{logger_level, info}]}
+].

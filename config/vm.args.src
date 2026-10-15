@@ -1,0 +1,9 @@
+## Node identity and runtime flags for mcl_agora.
+-name ${MCL_NODE_NAME}@${MCL_NODE_HOST}
+-setcookie ${MCL_COOKIE}
+
++K true
+
+## Async thread pool. The keeper writes to its event store and does no port I/O
+## of its own; the store's own pools are what matter, not this flag.
++A 8

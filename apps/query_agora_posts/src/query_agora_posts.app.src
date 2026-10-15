@@ -1,0 +1,14 @@
+{application, query_agora_posts, [
+    {description, "QRY: the get_posts_page query over the mcl-agora record"},
+    {vsn, "0.1.0"},
+    {registered, [query_agora_posts_sup]},
+    {mod, {query_agora_posts_app, []}},
+    %% The read model it answers from, and the CMD app that owns the wire shape
+    %% of a post (agora_post_wire). QRY reads; it never dispatches a command.
+    {applications, [kernel, stdlib, macula, mcl_om,
+                    guide_agora_post_lifecycle, project_agora_posts]},
+    {env, []},
+    {modules, []},
+    {licenses, ["Apache-2.0"]},
+    {links, []}
+]}.

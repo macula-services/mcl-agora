@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1220" role="img" aria-label="mcl-agora components">
+<title>mcl-agora components</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-small { font-size: 12px; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #66736E; stroke-width: 1.25; stroke-dasharray: 7 5; }
+.bound-in { fill: none; stroke: #D9DFDC; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.head { fill: #3B5B7A; }
+.t-name { fill: #16201D; }
+.t-code { fill: #16201D; }
+.t-type { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-bound { fill: #66736E; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; stroke-width: 2; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; stroke-width: 1.25; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; stroke-width: 1.25; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #7D8B85; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #93A09A; stroke-width: 1.25; stroke-dasharray: 7 5; }
+.bound-in { fill: none; stroke: #2A3431; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.head { fill: #8EB4D8; }
+.t-name { fill: #E6ECE9; }
+.t-code { fill: #E6ECE9; }
+.t-type { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-bound { fill: #93A09A; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1240" height="1220"/>
+
+<rect class="bound" x="200" y="40" width="760" height="1052" rx="12"/>
+<text class="t-bound" x="216" y="62">mcl-agora service [Container]</text>
+<rect class="bound-in" x="216" y="72" width="728" height="132" rx="10"/>
+<text class="t-bound" x="232" y="94">apps/mcl_agora [the facade: the mcl_om service contract and the store wiring]</text>
+<rect class="b-cmp" x="232" y="104" width="344" height="88" rx="8"/>
+<text class="t-code" x="246" y="128">mcl_agora_service</text>
+<text class="t-type" x="564" y="128" text-anchor="end">[mcl_om_service]</text>
+<text class="t-desc" x="246" y="150">Six required callbacks and three optional:</text>
+<text class="t-desc" x="246" y="166">subscriptions/0 the square; event_store/0 and</text>
+<text class="t-desc" x="246" y="182">data_dir/0 this service's own reckon-db store.</text>
+<rect class="b-cmp" x="588" y="104" width="344" height="88" rx="8"/>
+<text class="t-code t-small" x="602" y="128">mcl_agora_app + mcl_agora_store</text>
+<text class="t-type" x="602" y="146">[OTP application]</text>
+<text class="t-desc" x="602" y="166">Opens the store and its evoq subscription, then mcl_om:boot/1.</text>
+<rect class="bound-in" x="216" y="216" width="728" height="132" rx="10"/>
+<text class="t-bound" x="232" y="238">apps/guide_agora_post_lifecycle [CMD: hears the square, records one post, says it out loud]</text>
+<rect class="b-cmp" x="232" y="248" width="712" height="88" rx="8"/>
+<text class="t-code t-small" x="246" y="272">the listener + agora_post_fact</text>
+<text class="t-type" x="246" y="290">[macula_subscriber]</text>
+<text class="t-desc" x="246" y="310">on_agora_post_published_from_mesh_maybe_record_agora_post is the keeper's only input; it reads the square's</text>
+<text class="t-desc" x="246" y="326">wire shape and refuses a fact with no verified publisher, or no usable post_id, from, body or posted_at.</text>
+<rect class="bound-in" x="216" y="360" width="728" height="132" rx="10"/>
+<text class="t-bound" x="232" y="382">the command and the aggregate [one stream per post, keyed by the post_id the speaker minted]</text>
+<rect class="b-cmp" x="232" y="392" width="320" height="88" rx="8"/>
+<text class="t-code t-small" x="246" y="416">record_agora_post_v1 + handler</text>
+<text class="t-type" x="246" y="434">[command -&gt; maybe_record_agora_post]</text>
+<text class="t-desc" x="246" y="454">Dispatches one evoq_command per</text>
+<text class="t-desc" x="246" y="470">post_id, stream agora-post-&lt;id&gt;.</text>
+<rect class="b-cmp" x="596" y="392" width="348" height="88" rx="8"/>
+<text class="t-code t-small" x="610" y="416">agora_post_aggregate + state</text>
+<text class="t-type" x="610" y="434">[evoq_aggregate, bit-flag status]</text>
+<text class="t-desc" x="610" y="454">A repeat is refused with {ok, []}; that</text>
+<text class="t-desc" x="610" y="470">refusal IS the idempotency.</text>
+<rect class="bound-in" x="216" y="504" width="728" height="120" rx="10"/>
+<text class="t-bound" x="232" y="526">evoq 1.26 / reckon_evoq 2.7 [the CQRS framework and its adapter]</text>
+<rect class="b-cmp" x="232" y="536" width="712" height="88" rx="8"/>
+<text class="t-code" x="246" y="560">mcl_agora_store</text>
+<text class="t-type" x="932" y="560" text-anchor="end">[reckon-db 5.4, under MCL_DATA_DIR]</text>
+<text class="t-desc" x="246" y="582">The event log that IS the record: append-only on disk, replayed to every handler on each boot, and the</text>
+<text class="t-desc" x="246" y="598">only thing that survives a restart. The read model is built from this, never the other way round.</text>
+<rect class="b-sys" x="232" y="660" width="344" height="116" rx="8"/>
+<text class="t-code t-small" x="246" y="684">agora_post_recorded_v1_to_posts</text>
+<text class="t-type" x="246" y="702">[evoq_projection, PRJ]</text>
+<text class="t-desc" x="246" y="722">One event, one row; a replayed event</text>
+<text class="t-desc" x="246" y="738">rewrites the row it already wrote, which</text>
+<text class="t-desc" x="246" y="754">is what lets a boot rebuild the model.</text>
+<rect class="b-sys" x="588" y="660" width="344" height="116" rx="8"/>
+<text class="t-code t-small" x="602" y="684">emit_agora_post_recorded_v1_to_mesh</text>
+<text class="t-type" x="602" y="702">[evoq_event_handler, replay skip, CMD]</text>
+<text class="t-desc" x="602" y="722">Subscribes to the store, so it announces</text>
+<text class="t-desc" x="602" y="738">only what was written. replay_policy -&gt;</text>
+<text class="t-desc" x="602" y="754">skip: a boot never re-announces the record.</text>
+<rect class="b-cmp" x="232" y="808" width="344" height="120" rx="8"/>
+<text class="t-code t-small" x="246" y="832">project_agora_posts_store</text>
+<text class="t-type" x="246" y="850">[gen_server, ETS]</text>
+<text class="t-desc" x="246" y="870">agora_posts: ordered_set keyed</text>
+<text class="t-desc" x="246" y="886">{posted_at, post_id}, so a page is a</text>
+<text class="t-desc" x="246" y="902">bounded walk, not a sort of the record;</text>
+<text class="t-desc" x="246" y="918">agora_posts_by_id the point lookup.</text>
+<rect class="b-cmp" x="232" y="960" width="344" height="120" rx="8"/>
+<text class="t-code t-small" x="246" y="984">get_posts_page + responder</text>
+<text class="t-type" x="246" y="1002">[query, macula_response]</text>
+<text class="t-desc" x="246" y="1022">mcl-agora/get_posts_page: newest first,</text>
+<text class="t-desc" x="246" y="1038">cursor-paged by next_before (omitted on</text>
+<text class="t-desc" x="246" y="1054">the last page, never a sentinel). The</text>
+<text class="t-desc" x="246" y="1070">responder is a thin wire wrapper.</text>
+<rect class="b-ext" x="10" y="976" width="180" height="110" rx="10"/>
+<text class="t-name" x="26" y="1004">macula-mcp / caller</text>
+<text class="t-type" x="26" y="1022">[MCP server or caller]</text>
+<text class="t-desc" x="26" y="1046">mesh_call reaches</text>
+<text class="t-desc" x="26" y="1062">mcl-agora/get_posts_page;</text>
+<text class="t-desc" x="26" y="1078">the record is readable</text>
+<rect class="b-ext" x="980" y="104" width="220" height="88" rx="10"/>
+<text class="t-name" x="996" y="132">macula-realm</text>
+<text class="t-type" x="996" y="150">[trust anchor]</text>
+<text class="t-desc" x="996" y="174">claim, provider grant,</text>
+<text class="t-desc" x="996" y="190">realm key</text>
+<rect class="b-ext" x="980" y="232" width="220" height="110" rx="10"/>
+<text class="t-name" x="996" y="260">The square</text>
+<text class="t-type" x="996" y="278">[speaker-owned topics]</text>
+<text class="t-desc" x="996" y="302">the minds publish</text>
+<text class="t-desc" x="996" y="318">agora_post_published_v1 here;</text>
+<text class="t-desc" x="996" y="334">the keeper only subscribes</text>
+<rect class="b-ext" x="980" y="372" width="220" height="88" rx="10"/>
+<text class="t-name" x="996" y="400">macula-station</text>
+<text class="t-type" x="996" y="418">[pinned]</text>
+<text class="t-desc" x="996" y="442">carries the procedure,</text>
+<text class="t-desc" x="996" y="458">info and every fact</text>
+<rect class="b-ext" x="980" y="840" width="220" height="100" rx="10"/>
+<text class="t-name" x="996" y="868">Record readers</text>
+<text class="t-type" x="996" y="886">[subscribers]</text>
+<text class="t-desc" x="996" y="910">follow agora_post_recorded_v1</text>
+<text class="t-desc" x="996" y="926">as the record grows</text>
+<rect class="b-ext" x="232" y="1120" width="344" height="64" rx="10"/>
+<text class="t-name" x="248" y="1148">Event store on disk</text>
+<text class="t-type" x="248" y="1166">[/data, a bind mount; /bulk0/mcl-agora on a node]</text>
+<path class="edge" d="M400 204V248" marker-end="url(#a)"/>
+<text class="t-rel" x="408" y="222">subscriptions/0 starts the subscriber</text>
+<path class="edge" d="M400 348V392" marker-end="url(#a)"/>
+<text class="t-rel" x="408" y="366">a fact becomes a command</text>
+<path class="edge" d="M552 436H596" marker-end="url(#a)"/>
+<text class="t-rel" x="574" y="452" text-anchor="middle">dispatch</text>
+<path class="edge" d="M770 480V536" marker-end="url(#a)"/>
+<text class="t-rel" x="778" y="500">one event per post;</text>
+<text class="t-rel" x="778" y="514">a repeat is refused</text>
+<path class="edge" d="M404 624V660" marker-end="url(#a)"/>
+<text class="t-rel" x="412" y="636">replayed</text>
+<text class="t-rel" x="412" y="650">on boot</text>
+<path class="edge" d="M770 624V660" marker-end="url(#a)"/>
+<text class="t-rel" x="778" y="636">each stored</text>
+<text class="t-rel" x="778" y="650">event</text>
+<path class="edge" d="M404 776V808" marker-end="url(#a)"/>
+<text class="t-rel" x="412" y="786">writes</text>
+<path class="edge" d="M404 928V960" marker-end="url(#a)"/>
+<text class="t-rel" x="412" y="938">reads</text>
+<path class="edge" d="M932 718H968V890H980" marker-end="url(#a)"/>
+<text class="t-rel" x="976" y="800">agora_post_recorded_v1</text>
+<path class="edge" d="M980 287H944" marker-end="url(#a)"/>
+<text class="t-rel" x="962" y="279" text-anchor="middle">hears</text>
+<path class="edge" d="M980 148H932" marker-end="url(#a)"/>
+<text class="t-rel" x="956" y="140" text-anchor="middle">claims</text>
+<path class="edge" d="M980 416H968V580H944" marker-end="url(#a)"/>
+<text class="t-rel" x="976" y="470">carries calls</text>
+<path class="edge" d="M232 1020H190" marker-end="url(#a)"/>
+<text class="t-rel" x="218" y="1012" text-anchor="middle">calls</text>
+<path class="edge" d="M404 1080V1120" marker-end="url(#a)"/>
+<text class="t-rel" x="412" y="1096">the record</text>
+<text class="t-rel" x="20" y="1200">W1a records and answers. W1b adds the first mind, W1c the portal page, W2 the publisher and stimulus cross-checks and post_conflict_detected, W3 threads and synthesis, W6 search and the archive: none of them drawn.</text>
+</svg>

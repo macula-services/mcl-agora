@@ -1,17 +1,17 @@
-.eunit
-*.o
-*.beam
-*.plt
-erl_crash.dump
-.concrete/DEV_MODE
-
-# rebar 2.x
-.rebar
-rel/example_project
-ebin/*.beam
-deps
-
-# rebar 3
-.rebar3
 _build/
+rebar.lock
+*.beam
+erl_crash.dump
 _checkouts/
+rebar3.crashdump
+data/
+
+# Kept from the scaffold this repository started as (the rebar3 default),
+# rather than dropped when the fleet's list went in: each of these still covers
+# something `_build/' above does not, and an ignored-but-present artefact that
+# stops being ignored gets committed by exactly the person who did not expect
+# it to be trackable.
+*.plt
+.eunit
+.rebar3
+deps

@@ -1,0 +1,96 @@
+%% @doc `mcl-agora/info', the procedure mcl_om answers for this service with no
+%% code of its own: who it is, its versions and what it advertises.
+%%
+%% Built from this service's real info/0 and its real capabilities/0 with
+%% `info' added the way mcl_om:boot/2 adds it, then sent through macula's own
+%% frame codec, the path a reply takes. What arrives must be text, never bytes,
+%% and name this service and its one procedure.
+%%
+%% The version floors are rebar.config's floors, so a resolve OLDER than the
+%% declared line fails here. They do not hold the wire: forward drift onto
+%% macula 15 passes these floors, and what refuses that is the `~> 14.2'
+%% constraint, at resolve time.
+-module(mcl_agora_info_tests).
+
+-include_lib("eunit/include/eunit.hrl").
+
+-define(SERVICE, mcl_agora_service).
+-define(ORG, <<"mcl-agora">>).
+
+info_round_trip_test_() ->
+    {setup, fun configure/0, fun unconfigure/1,
+     fun(_) ->
+         Reply = through_the_codec(mcl_om_info:render(facts())),
+         #{name := Name, version := Version} = ?SERVICE:info(),
+         Own = [<<(?ORG)/binary, "/", N/binary>> || #{name := N} <- ?SERVICE:capabilities()],
+         [?_assertEqual({text, Name}, maps:get(name, Reply)),
+          ?_assertEqual({text, Version}, maps:get(version, Reply)),
+          ?_assertEqual({text, ?ORG}, maps:get(org, Reply)),
+          ?_assertEqual([{text, C} || C <- [<<(?ORG)/binary, "/info">> | Own]],
+                        maps:get(capabilities, Reply)),
+          %% Every value that is not a number or a nested list is text: a bare
+          %% binary would reach a non-BEAM reader as bytes.
+          ?_assertEqual([], [V || V <- lists:flatten(maps:values(Reply)), is_binary(V)]),
+          %% Floors, not exact minors: the pairing that matters is mcl_om 0.39
+          %% or later WITH macula 14.2 or later.
+          ?_assert(at_least(maps:get(mcl_om_version, Reply), [0, 39])),
+          ?_assert(at_least(maps:get(macula_version, Reply), [14, 2]))]
+     end}.
+
+%% The service must leave `info' to mcl_om: declaring its own refuses boot.
+the_service_does_not_declare_info_test_() ->
+    {setup, fun configure/0, fun unconfigure/1,
+     fun(_) -> ?_assertMatch([_ | _], mcl_om_info:with_info(?SERVICE:capabilities())) end}.
+
+%% What mcl_om_info:answer/1 gathers on a live node, from this service's own
+%% sources instead of a running mcl_om.
+facts() ->
+    #{name := Name, version := Version, description := Description} = ?SERVICE:info(),
+    Caps = mcl_om_info:with_info(?SERVICE:capabilities()),
+    #{name => Name, version => Version, description => Description,
+      service_name => Name, box => <<"test-box">>, org => ?ORG,
+      node_id => <<16#ab:256>>,
+      macula_version => vsn(macula), mcl_om_version => vsn(mcl_om),
+      uptime_s => 1, status => ok,
+      capabilities => [<<(?ORG)/binary, "/", N/binary>> || #{name := N} <- Caps]}.
+
+%% Whether a `{text, <<"X.Y.Z">>}' version is at least [Major, Minor].
+at_least({text, Vsn}, Floor) ->
+    [Major, Minor | _] = [binary_to_integer(P) || P <- binary:split(Vsn, <<".">>, [global])],
+    [Major, Minor] >= Floor.
+
+vsn(App) ->
+    _ = application:load(App),
+    {ok, Vsn} = application:get_key(App, vsn),
+    Vsn.
+
+through_the_codec(Payload) ->
+    {ok, Key} = macula_node_keys:generate(identity, pq_hybrid, #{puzzle_difficulty => 0}),
+    Spec = #{request_id => crypto:strong_rand_bytes(16),
+             realm => crypto:hash(sha256, <<"io.macula">>),
+             procedure => <<(?ORG)/binary, "/info">>,
+             target => macula_node_keys:key_id(Key),
+             deadline => erlang:system_time(millisecond) + 60_000,
+             payload => Payload},
+    {ok, Decoded, <<>>} = macula_frame:decode(macula_frame:encode(macula_frame:call(Spec, Key))),
+    {ok, #{payload := Delivered}} = macula_frame:verify_request(Decoded, pq_hybrid),
+    %% Keys arrive as sent, CBOR text (`{text, <<"name">>}'); values keep their
+    %% `{text, _}' tags, which is what the assertions look at.
+    maps:from_list([{key(K), V} || {K, V} <- maps:to_list(Delivered)]).
+
+key({text, K}) -> binary_to_existing_atom(K).
+
+%% The topics are built at start, so the realm name has to be configured for
+%% anything that touches them.
+configure() ->
+    _ = application:load(mcl_agora),
+    _ = application:load(guide_agora_post_lifecycle),
+    Existing = application:get_env(guide_agora_post_lifecycle, realm_name),
+    application:set_env(guide_agora_post_lifecycle, realm_name, "io.macula"),
+    Existing.
+
+unconfigure(Existing) ->
+    restored(Existing).
+
+restored(undefined) -> application:unset_env(guide_agora_post_lifecycle, realm_name);
+restored({ok, Value}) -> application:set_env(guide_agora_post_lifecycle, realm_name, Value).

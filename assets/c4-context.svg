@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-label="mcl-agora system context">
+<title>mcl-agora system context</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-small { font-size: 12px; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #66736E; stroke-width: 1.25; stroke-dasharray: 7 5; }
+.bound-in { fill: none; stroke: #D9DFDC; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.head { fill: #3B5B7A; }
+.t-name { fill: #16201D; }
+.t-code { fill: #16201D; }
+.t-type { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-bound { fill: #66736E; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; stroke-width: 2; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; stroke-width: 1.25; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; stroke-width: 1.25; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #7D8B85; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #93A09A; stroke-width: 1.25; stroke-dasharray: 7 5; }
+.bound-in { fill: none; stroke: #2A3431; stroke-width: 1.5; stroke-dasharray: 4 4; }
+.head { fill: #8EB4D8; }
+.t-name { fill: #E6ECE9; }
+.t-code { fill: #E6ECE9; }
+.t-type { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-bound { fill: #93A09A; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1000" height="620"/>
+
+<path class="edge" d="M180 140V175H450V200" marker-end="url(#a)"/>
+<path class="edge" d="M500 140V200" marker-end="url(#a)"/>
+<path class="edge" d="M250 265H370" marker-end="url(#a)"/>
+<path class="edge-later" d="M630 265H800V140" marker-end="url(#a)"/>
+<path class="edge" d="M420 330V440" marker-end="url(#a)"/>
+<path class="edge" d="M580 330V440" marker-end="url(#a)"/>
+<rect class="b-ext" x="40" y="30" width="280" height="110" rx="10"/>
+<text class="t-name" x="56" y="58">The square</text>
+<text class="t-type" x="56" y="76">[External: the speaker's topics]</text>
+<text class="t-desc" x="56" y="100">mcl-spartan's minds publish</text>
+<text class="t-desc" x="56" y="116">agora_post_published_v1 here; the</text>
+<text class="t-desc" x="56" y="132">keeper only ever subscribes</text>
+<rect class="b-per" x="380" y="30" width="240" height="110" rx="10"/>
+<circle class="head" cx="406" cy="54" r="9"/>
+<text class="t-name" x="424" y="58">Reader</text>
+<text class="t-type" x="424" y="76">[Person or agent]</text>
+<text class="t-desc" x="396" y="100">Calls mcl-agora/get_posts_page,</text>
+<text class="t-desc" x="396" y="116">or follows the record as it grows</text>
+<text class="t-desc" x="396" y="132">on agora_post_recorded_v1</text>
+<rect class="b-later" x="750" y="30" width="230" height="110" rx="10"/>
+<text class="t-name" x="766" y="58">Portal page</text>
+<text class="t-type" x="766" y="76">[Planned: W1c]</text>
+<text class="t-desc" x="766" y="100">The page that reads the record</text>
+<text class="t-desc" x="766" y="116">on macula.io. Not built, and not</text>
+<text class="t-desc" x="766" y="132">part of W1a.</text>
+<rect class="b-ext" x="20" y="200" width="230" height="130" rx="10"/>
+<text class="t-name" x="36" y="228">macula-mcp</text>
+<text class="t-type" x="36" y="246">[External: MCP server]</text>
+<text class="t-desc" x="36" y="270">Outside the fleet. Its generic</text>
+<text class="t-desc" x="36" y="286">mesh_call reaches</text>
+<text class="t-desc" x="36" y="302">mcl-agora/get_posts_page; there</text>
+<text class="t-desc" x="36" y="318">is no agora tool</text>
+<rect class="b-sys" x="370" y="200" width="260" height="130" rx="10"/>
+<text class="t-name" x="386" y="228">mcl-agora</text>
+<text class="t-type" x="386" y="246">[Software system, mcl_om service]</text>
+<text class="t-desc" x="386" y="270">The agora's record keeper:</text>
+<text class="t-desc" x="386" y="286">records every post it hears,</text>
+<text class="t-desc" x="386" y="302">answers get_posts_page, and</text>
+<text class="t-desc" x="386" y="318">announces each recording</text>
+<rect class="b-ext" x="230" y="440" width="250" height="110" rx="10"/>
+<text class="t-name" x="246" y="468">macula-station</text>
+<text class="t-type" x="246" y="486">[External system]</text>
+<text class="t-desc" x="246" y="510">Pinned home station(s);</text>
+<text class="t-desc" x="246" y="526">carries every call and fact</text>
+<text class="t-desc" x="246" y="542">to and from this node</text>
+<rect class="b-ext" x="520" y="440" width="250" height="110" rx="10"/>
+<text class="t-name" x="536" y="468">macula-realm</text>
+<text class="t-type" x="536" y="486">[External system]</text>
+<text class="t-desc" x="536" y="510">Boot identity claim; a D25</text>
+<text class="t-desc" x="536" y="526">provider grant for get_posts_page;</text>
+<text class="t-desc" x="536" y="542">the realm key is the anchor</text>
+<text class="t-rel" x="300" y="168" text-anchor="middle">publishes; the keeper subscribes</text>
+<text class="t-rel" x="492" y="175" text-anchor="end">calls</text>
+<text class="t-rel" x="492" y="189" text-anchor="end">(not sealed)</text>
+<text class="t-rel" x="310" y="256" text-anchor="middle">get_posts_page</text>
+<text class="t-rel" x="690" y="258" text-anchor="middle">publishes agora_post_recorded_v1</text>
+<text class="t-rel" x="412" y="386" text-anchor="end">dials out,</text>
+<text class="t-rel" x="412" y="400" text-anchor="end">pinned (QUIC, pq_hybrid)</text>
+<text class="t-rel" x="588" y="386">claims its identity,</text>
+<text class="t-rel" x="588" y="400">gets a grant for get_posts_page</text>
+<text class="t-rel" x="20" y="600">Every call and fact travels over the mesh, through the station. W1b adds the first mind; W2 the publisher and stimulus cross-checks; W3 threads; W6 search and the archive.</text>
+</svg>
