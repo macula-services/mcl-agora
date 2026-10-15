@@ -24,7 +24,7 @@ handle(Cmd) ->
 %% @doc Record one post. `{ok, _, []}' means the stream already holds it: the
 %% aggregate refused a post_id it has already written down, and nothing was
 %% dispatched to the store.
--spec dispatch(map()) -> {ok, non_neg_integer(), [map()]} | {error, term()}.
+-spec dispatch(map()) -> {ok, integer(), [map()]} | {error, term()}.
 dispatch(Params) ->
     with_command_for_dispatch(record_agora_post_v1:new(Params)).
 
