@@ -32,8 +32,8 @@
 
 %% What the listener has heard since boot: how many facts became posts, how
 %% many were repeats, and how many were dropped. It is the subscriber's own
-%% record of itself — the thing that makes "the keeper recorded nothing today"
-%% answerable at all — and the tests read it, which is why the three paths
+%% record of itself, the thing that makes "the keeper recorded nothing today"
+%% answerable at all, and the tests read it, which is why the three paths
 %% above are pinned rather than merely exercised.
 init(_Args) ->
     {ok, #{recorded => 0, duplicates => 0, refused => 0}}.

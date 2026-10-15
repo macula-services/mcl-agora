@@ -54,8 +54,8 @@ capabilities() ->
        handler => {get_posts_page_responder, []}}].
 
 %% THE AUTHORITY THIS SERVICE ASKS THE REALM FOR, and deliberately nothing
-%% more. Nothing reads this yet — it is a declaration of intent for the
-%% realm-grant path — so it is written to say what the keeper is FOR and
+%% more. Nothing reads this yet; it is a declaration of intent for the
+%% realm-grant path, so it is written to say what the keeper is FOR and
 %% nothing it does not need to be trusted with.
 %%
 %% `actions' stays in step with `capabilities': the one procedure above, and
@@ -66,7 +66,7 @@ capabilities() ->
 %% the SPEAKERS own and writes only into its own store, so there is no topic to
 %% name here: the record is the keeper's own org, and the square is not, and a
 %% grant over the square is the one thing "the keeper cannot put words in the
-%% square" forbids. This matches the fleet's live practice — mcl-sentinel
+%% square" forbids. This matches the fleet's live practice: mcl-sentinel
 %% subscribes to mcl-warden's topics and mcl-news publishes a fact, and both
 %% declare `resources => []'.
 %%

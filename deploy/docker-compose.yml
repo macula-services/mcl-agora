@@ -1,4 +1,4 @@
-# mcl-agora — how to run this service.
+# mcl-agora: how to run this service.
 #
 # Runnable as-is. It carries what the SERVICE knows about itself: its image, the
 # data volume, the environment variables its own code reads, and its health

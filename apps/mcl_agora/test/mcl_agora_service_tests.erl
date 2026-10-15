@@ -124,7 +124,7 @@ identity_spec_claims_no_authority_over_the_square() ->
     ?assertEqual([<<"get_posts_page">>], Actions),
     %% NOTHING, named. The keeper writes into its own org's store and reads a
     %% square that belongs to the speakers, so there is no topic it needs the
-    %% realm to authorise — and the square is the one it must never be given.
+    %% realm to authorise, and the square is the one it must never be given.
     ?assertEqual([], Resources).
 
 configure_realm() ->

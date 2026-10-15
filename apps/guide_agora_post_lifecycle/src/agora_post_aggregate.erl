@@ -23,8 +23,8 @@ init(PostId) ->
 %% ⚠ A STREAM ID IS NOT FREE-FORM, AND THIS ONE WAS NOT VALID.
 %%
 %% reckon_gater_stream_id:validate/1 accepts exactly
-%% `^[a-z]{1,32}-[a-f0-9]{32}$' — lowercase LETTERS, ONE hyphen, then 32
-%% lowercase hex — and reckon-db checks it on EVERY append. The first version
+%% `^[a-z]{1,32}-[a-f0-9]{32}$', lowercase LETTERS, ONE hyphen, then 32
+%% lowercase hex, and reckon-db checks it on EVERY append. The first version
 %% of this function was `<<"agora-post-", PostId/binary>>', which has two
 %% hyphens AND carries the speaker's id verbatim, so every append would have
 %% failed with `{invalid_stream_id, malformed_user_id, _}', the listener would
