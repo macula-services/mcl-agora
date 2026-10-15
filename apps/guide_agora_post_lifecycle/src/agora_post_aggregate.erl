@@ -20,9 +20,35 @@ state_module() -> agora_post_state.
 init(PostId) ->
     {ok, agora_post_state:new(PostId)}.
 
+%% ⚠ A STREAM ID IS NOT FREE-FORM, AND THIS ONE WAS NOT VALID.
+%%
+%% reckon_gater_stream_id:validate/1 accepts exactly
+%% `^[a-z]{1,32}-[a-f0-9]{32}$' — lowercase LETTERS, ONE hyphen, then 32
+%% lowercase hex — and reckon-db checks it on EVERY append. The first version
+%% of this function was `<<"agora-post-", PostId/binary>>', which has two
+%% hyphens AND carries the speaker's id verbatim, so every append would have
+%% failed with `{invalid_stream_id, malformed_user_id, _}', the listener would
+%% have counted each post as refused, and the record would have stayed empty
+%% forever while the service looked perfectly healthy. No unit test caught it,
+%% because every one of them meck'd the dispatch or called execute/2 directly;
+%% agora_post_stream_id_tests and mcl_agora_store_tests exist so that cannot
+%% happen again.
+%%
+%% The suffix is DERIVED, not carried: 128 bits of the post id's sha256, hex.
+%% Passing the speaker's own id through would make the keeper's storage layout
+%% a function of somebody else's identifier format, and a post_id that is not
+%% 32 hex characters would silently break the record. Deriving it keeps
+%% `post_id' whatever the speaker wants it to be.
+%%
+%% Deterministic, which is the whole point: a redelivery must address the SAME
+%% stream, so the same post_id must always give the same id.
 -spec stream_id(binary()) -> binary().
 stream_id(PostId) when is_binary(PostId) ->
-    <<"agora-post-", PostId/binary>>.
+    <<"agorapost-", (suffix(PostId))/binary>>.
+
+suffix(PostId) ->
+    <<Bits:16/binary, _/binary>> = crypto:hash(sha256, PostId),
+    binary:encode_hex(Bits, lowercase).
 
 apply(State, Event) ->
     agora_post_state:apply_event(State, Event).

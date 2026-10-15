@@ -14,9 +14,13 @@
 -define(POST_ID, <<"a1b2c3d4e5f60718293a4b5c6d7e8f90">>).
 -define(PUBLISHER, <<0:256>>).
 
+%% The stream's shape is agora_post_stream_id_tests' business. What matters
+%% here is that it is a valid stream id -- the aggregate is worth nothing if
+%% reckon-db refuses every append.
 one_stream_per_post_id_test() ->
-    ?assertEqual(<<"agora-post-", ?POST_ID/binary>>,
-                 agora_post_aggregate:stream_id(?POST_ID)).
+    StreamId = agora_post_aggregate:stream_id(?POST_ID),
+    ?assertEqual(ok, reckon_gater_stream_id:validate(StreamId)),
+    ?assertEqual(<<"agorapost-">>, binary:part(StreamId, 0, 10)).
 
 a_first_post_produces_exactly_one_event_test() ->
     {ok, Events} = execute(fresh_stream()),
