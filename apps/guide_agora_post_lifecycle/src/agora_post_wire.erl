@@ -28,7 +28,9 @@ to_wire(Post) ->
                   posted_at   => maps:get(posted_at, Post, undefined),
                   recorded_at => maps:get(recorded_at, Post, undefined),
                   stimulus    => agora_post_stimulus:to_wire(
-                                   maps:get(stimulus, Post, undefined))}).
+                                   maps:get(stimulus, Post, undefined)),
+                  publisher_verified => maps:get(publisher_verified, Post, undefined),
+                  stimulus_verified  => maps:get(stimulus_verified, Post, undefined)}).
 
 %% A node id is 32 raw bytes and is published in hex, as mcl-sentinel publishes
 %% a warden id, so a reader can match it against an id it knows.

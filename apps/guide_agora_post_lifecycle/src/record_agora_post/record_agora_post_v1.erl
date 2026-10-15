@@ -14,6 +14,17 @@
 %%% payload: it is the identity the mesh verified, and a post the mesh could not
 %%% attribute never reaches this command at all (see the listener).
 %%%
+%%% Two verdicts travel with it, decided by the listener at the moment the
+%%% keeper heard the post, as integers because nothing on this mesh is a
+%%% boolean:
+%%%
+%%%   publisher_verified  1 when the publisher is an admitted speaker, 0 when
+%%%                       the keeper could not find out. A publisher the realm
+%%%                       says is NOT a speaker never reaches this command.
+%%%   stimulus_verified   1 when every field of the card is the field the
+%%%                       keeper heard mcl-news report itself, 0 otherwise,
+%%%                       and absent when the post carries no card.
+%%%
 %%% Everything else is optional and is recorded as it arrived.
 -module(record_agora_post_v1).
 
@@ -31,7 +42,9 @@
     item_id    :: binary() | undefined,
     kind       :: binary() | undefined,
     posted_at  :: integer(),
-    stimulus   :: map() | undefined
+    stimulus   :: map() | undefined,
+    publisher_verified :: 0 | 1,
+    stimulus_verified  :: 0 | 1 | undefined
 }).
 
 -opaque t() :: #record_agora_post_v1{}.
@@ -57,7 +70,9 @@ new(#{post_id := Id, from := From, publisher := Publisher, body := Body,
                                item_id = optional(Params, item_id),
                                kind = optional(Params, kind),
                                posted_at = At,
-                               stimulus = optional_map(Params, stimulus)}};
+                               stimulus = optional_map(Params, stimulus),
+                               publisher_verified = verdict(Params, publisher_verified, 0),
+                               stimulus_verified = verdict(Params, stimulus_verified, undefined)}};
 new(Params) when is_map(Params) ->
     {error, {malformed_agora_post, missing(Params)}};
 new(_NotAMap) ->
@@ -93,6 +108,13 @@ optional(Params, Key) ->
 value(Bin) when is_binary(Bin), Bin =/= <<>> -> Bin;
 value(_AbsentOrNotText)                      -> undefined.
 
+%% A verdict is 0 or 1; anything else is the default, never a third value.
+verdict(Params, Key, Default) ->
+    verdict_value(maps:get(Key, Params, Default), Default).
+
+verdict_value(V, _Default) when V =:= 0; V =:= 1 -> V;
+verdict_value(_Other, Default)                  -> Default.
+
 optional_map(Params, Key) ->
     case maps:get(Key, Params, undefined) of
         Map when is_map(Map), map_size(Map) > 0 -> Map;
@@ -112,7 +134,9 @@ to_map(#record_agora_post_v1{} = Cmd) ->
       item_id      => Cmd#record_agora_post_v1.item_id,
       kind         => Cmd#record_agora_post_v1.kind,
       posted_at    => Cmd#record_agora_post_v1.posted_at,
-      stimulus     => Cmd#record_agora_post_v1.stimulus}.
+      stimulus     => Cmd#record_agora_post_v1.stimulus,
+      publisher_verified => Cmd#record_agora_post_v1.publisher_verified,
+      stimulus_verified  => Cmd#record_agora_post_v1.stimulus_verified}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
 from_map(#{post_id := _, from := _, publisher := _, body := _, posted_at := _} = Map) ->

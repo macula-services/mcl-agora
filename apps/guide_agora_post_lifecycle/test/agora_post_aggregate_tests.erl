@@ -34,13 +34,41 @@ a_repeat_post_id_produces_no_second_event_test() ->
     Recorded = recorded_stream(),
     ?assertEqual({ok, []}, execute(Recorded)).
 
-%% And it is the POST ID that decides, not the body or the author: the same
-%% words from the same mind, sent twice, are one post.
-a_repeat_is_refused_whatever_the_rest_of_the_command_says_test() ->
-    Other = command(#{body => <<"something else entirely">>,
-                      from => <<"someone.else">>,
-                      posted_at => 9999999999999}),
+%% It is the post_id and the BODY that decide, not the author or the clock: the
+%% same words under the same id, whoever claims them and whenever, are one post.
+a_repeat_with_the_same_body_is_refused_whatever_else_it_says_test() ->
+    Other = command(#{from => <<"someone.else">>, posted_at => 9999999999999}),
     ?assertEqual({ok, []}, agora_post_aggregate:execute(recorded_stream(), Other)).
+
+%% THE CONTRADICTION. A different body under a post_id already on the record is
+%% written down as a conflict, by hashes, and the first body stays.
+a_different_body_under_a_recorded_post_id_is_a_conflict_test() ->
+    {ok, [Conflict]} = agora_post_aggregate:execute(recorded_stream(), different()),
+    ?assertEqual(<<"agora_post_conflict_detected_v1">>, maps:get(event_type, Conflict)),
+    ?assertEqual(digest(<<"the record outlives the speakers">>), maps:get(kept_body_sha256, Conflict)),
+    ?assertEqual(digest(<<"something else entirely">>), maps:get(refused_body_sha256, Conflict)),
+    ?assertEqual(?PUBLISHER, maps:get(kept_publisher, Conflict)),
+    ?assertEqual(<<1:256>>, maps:get(refused_publisher, Conflict)),
+    %% Never the refused body itself.
+    ?assertNot(lists:member(<<"something else entirely">>, maps:values(Conflict))).
+
+%% The same contradiction delivered twice is written down once.
+a_contradiction_heard_again_is_a_redelivery_test() ->
+    {ok, [Conflict]} = agora_post_aggregate:execute(recorded_stream(), different()),
+    Conflicted = agora_post_state:apply_event(recorded_stream(), Conflict),
+    ?assert(agora_post_state:conflicted(Conflicted)),
+    ?assertEqual({ok, []}, agora_post_aggregate:execute(Conflicted, different())),
+    %% And the original body is still a plain redelivery.
+    ?assertEqual({ok, []}, execute(Conflicted)).
+
+%% A replay hands the state the stored envelope, fields under `data' with
+%% binary keys: it must come back to the same state as the live path.
+a_replayed_envelope_rebuilds_the_same_state_test() ->
+    {ok, [Recorded]} = execute(fresh_stream()),
+    Envelope = #{event_type => <<"agora_post_recorded_v1">>,
+                 data => maps:from_list([{atom_to_binary(K), V} || {K, V} <- maps:to_list(Recorded)])},
+    Replayed = agora_post_state:apply_event(fresh_stream(), Envelope),
+    ?assertEqual(agora_post_state:to_map(recorded_stream()), agora_post_state:to_map(Replayed)).
 
 a_command_the_aggregate_does_not_know_is_refused_test() ->
     ?assertEqual({error, unknown_command},
@@ -60,7 +88,14 @@ fresh_stream() ->
     agora_post_state:new(?POST_ID).
 
 recorded_stream() ->
-    agora_post_state:apply_event(fresh_stream(), #{}).
+    {ok, [Recorded]} = execute(fresh_stream()),
+    agora_post_state:apply_event(fresh_stream(), Recorded).
+
+different() ->
+    command(#{body => <<"something else entirely">>, publisher => <<1:256>>}).
+
+digest(Body) ->
+    binary:encode_hex(crypto:hash(sha256, Body), lowercase).
 
 %% A command as it reaches the aggregate: the flat payload evoq takes
 %% `command_type' out of, with the author's claim and the verified publisher

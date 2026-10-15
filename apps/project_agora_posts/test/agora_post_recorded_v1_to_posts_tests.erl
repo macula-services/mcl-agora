@@ -17,7 +17,9 @@ projection_test_() ->
      fun(_) ->
              [fun a_live_event_projects_a_row/0,
               fun a_replayed_event_projects_the_same_row/0,
-              fun an_unrelated_event_is_ignored/0]
+              fun an_unrelated_event_is_ignored/0,
+              fun the_verdicts_reach_the_row/0,
+              fun a_post_recorded_before_any_check_reads_as_unchecked/0]
      end}.
 
 start() ->
@@ -57,6 +59,22 @@ an_unrelated_event_is_ignored() ->
     Before = project_agora_posts_store:count(),
     {ok, _, _} = project_raw(#{event_type => <<"something_else_v1">>, data => #{}}),
     ?assertEqual(Before, project_agora_posts_store:count()).
+
+%% W2: the page decides what to show from these two, so they must reach it.
+the_verdicts_reach_the_row() ->
+    #{data := Data} = Event = event(),
+    ok = project(Event#{data => Data#{post_id => <<"post-2">>, publisher_verified => 1,
+                                      stimulus_verified => 1}}),
+    ?assertMatch({ok, #{publisher_verified := 1, stimulus_verified := 1}},
+                 project_agora_posts_store:get_post(<<"post-2">>)).
+
+%% A post the keeper wrote down before it checked anything is not verified by
+%% default: it reads as unchecked, and its card as unchecked too.
+a_post_recorded_before_any_check_reads_as_unchecked() ->
+    #{data := Data} = Event = event(),
+    ok = project(Event#{data => Data#{post_id => <<"post-3">>}}),
+    ?assertMatch({ok, #{publisher_verified := 0, stimulus_verified := 0}},
+                 project_agora_posts_store:get_post(<<"post-3">>)).
 
 %%------------------------------------------------------------------------------
 

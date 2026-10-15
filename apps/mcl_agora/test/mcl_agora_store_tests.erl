@@ -21,6 +21,7 @@ store_test_() ->
      [{timeout, 60, fun a_post_is_recorded_and_served_back/0},
       {timeout, 60, fun a_repeat_records_nothing_and_serves_one_row/0},
       {timeout, 60, fun the_record_survives_the_read_model_being_rebuilt/0},
+      {timeout, 60, fun a_different_body_is_written_down_as_a_conflict_once/0},
       {timeout, 60, fun opening_an_open_store_is_no_error/0}]}.
 
 %% THE WHOLE POINT, IN ONE TEST: dispatch lands an event, and the read model
@@ -60,17 +61,31 @@ the_record_survives_the_read_model_being_rebuilt() ->
     ?assertMatch({ok, _}, wait_for_post(?POST_ID)).
 
 %% mcl_om opens no store from 0.35 on, so nothing else proves this one opens.
+%% W2, against the real store: a different body under a recorded post_id is
+%% appended as a conflict, the first body stays on the record, and the same
+%% contradiction a second time appends nothing.
+a_different_body_is_written_down_as_a_conflict_once() ->
+    Contradiction = (command(?POST_ID))#{body => <<"not what was said">>},
+    {ok, _, [Conflict]} = maybe_record_agora_post:dispatch(Contradiction),
+    ?assertEqual(<<"agora_post_conflict_detected_v1">>, maps:get(event_type, Conflict)),
+    ?assertMatch({ok, _, []}, maybe_record_agora_post:dispatch(Contradiction)),
+    {ok, Row} = project_agora_posts_store:get_post(?POST_ID),
+    ?assertEqual(<<"something worth keeping">>, maps:get(body, Row)).
+
 opening_an_open_store_is_no_error() ->
     ?assertEqual(ok, mcl_agora_store:open(mcl_agora_service:event_store())).
 
 %%------------------------------------------------------------------------------
 
 dispatch(PostId) ->
-    maybe_record_agora_post:dispatch(#{post_id   => PostId,
-                                       from      => <<"a mind">>,
-                                       publisher => ?PUBLISHER,
-                                       body      => <<"something worth keeping">>,
-                                       posted_at => 1760000000000}).
+    maybe_record_agora_post:dispatch(command(PostId)).
+
+command(PostId) ->
+    #{post_id   => PostId,
+      from      => <<"a mind">>,
+      publisher => ?PUBLISHER,
+      body      => <<"something worth keeping">>,
+      posted_at => 1760000000000}.
 
 %% The projection is fed by the store's subscription and so runs a moment
 %% behind the dispatch. Poll rather than sleep a fixed amount.

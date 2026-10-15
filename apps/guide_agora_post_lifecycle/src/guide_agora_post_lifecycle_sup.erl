@@ -1,5 +1,6 @@
-%%% @doc Supervises the CMD department's own processes: the mesh emitter that
-%%% says each recorded post out loud.
+%%% @doc Supervises the CMD department's own processes: the keeper's memory of
+%%% what mcl-news reported (`heard_news_items'), and the two mesh emitters that
+%%% say each recorded post and each contradiction out loud.
 %%%
 %%% The listener is NOT here. It is a `macula_subscriber' declared by the
 %%% service module (`mcl_agora_service:subscriptions/0') and started by
@@ -21,8 +22,13 @@ start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
     Children = [
+        %% Before the emitters, and before mcl_om starts the subscriptions that
+        %% read and write it.
+        worker(heard_news_items, heard_news_items, start_link, []),
         worker(emit_agora_post_recorded_v1_to_mesh, evoq_event_handler, start_link,
-              [emit_agora_post_recorded_v1_to_mesh, #{}, #{}])
+              [emit_agora_post_recorded_v1_to_mesh, #{}, #{}]),
+        worker(emit_agora_post_conflict_detected_v1_to_mesh, evoq_event_handler, start_link,
+              [emit_agora_post_conflict_detected_v1_to_mesh, #{}, #{}])
     ],
     {ok, {#{strategy => one_for_one, intensity => 5, period => 10}, Children}}.
 

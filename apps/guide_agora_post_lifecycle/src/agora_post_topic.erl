@@ -1,9 +1,13 @@
 %%% @doc Where the square is, and where the record is said out loud.
 %%%
 %%% THE SQUARE IS NOT THE KEEPER'S TOPIC. Its org segment names the SPEAKERS,
-%%% so a keeper that holds no grant in their org cannot put words in the square
-%%% -- the inability is structural, not a promise the code keeps. This is the
-%%% same shape as mcl-sentinel listening on mcl-warden's topics.
+%%% the schema owner. That segment is NOT an access check: macula verifies who
+%%% signed a publication, not who may publish on a topic, so any node in the
+%%% realm can publish on the square, on the news wire, or on the keeper's own
+%%% record topic. Who counts is decided by asking the realm whether the
+%%% publisher is an admitted member of the org that owns the topic
+%%% (`mcl_om:org_member/2' with `speakers/0' or `news_sensor/0'), never by the
+%%% topic a fact arrived on.
 %%%
 %%% The square is a set of speaker-owned topics rather than one topic: today
 %%% there is one speaker and therefore one topic. Nothing here is built for a
@@ -19,11 +23,31 @@
 -module(agora_post_topic).
 
 -export([realm_name/0, check_realm_name/0, check_realm_name/2]).
--export([square_topics/0, square_topic/1, record_topic/1]).
+-export([square_topics/0, square_topic/1, record_topic/1, conflict_topic/1]).
+-export([news_topics/0, news_topic/1, speakers/0, news_sensor/0]).
 
 -define(APP, guide_agora_post_lifecycle).
 -define(SPEAKERS, <<"mcl-spartan">>).
 -define(KEEPER, <<"mcl-agora">>).
+-define(NEWS, <<"mcl-news">>).
+
+%% @doc The org whose admitted nodes are the square's speakers.
+-spec speakers() -> binary().
+speakers() -> ?SPEAKERS.
+
+%% @doc The org whose admitted nodes report the news a card must match.
+-spec news_sensor() -> binary().
+news_sensor() -> ?NEWS.
+
+%% @doc The news wire the keeper hears itself, to check every card against.
+-spec news_topics() -> [binary()].
+news_topics() ->
+    [news_topic(realm_name())].
+
+-spec news_topic(binary()) -> binary().
+news_topic(RealmName) ->
+    macula_topic:app_fact(RealmName, ?NEWS, <<"news">>, <<"wire">>,
+                          <<"news_item_reported">>, 1).
 
 %% @doc Every topic a post on the square is published to.
 -spec square_topics() -> [binary()].
@@ -41,6 +65,12 @@ square_topic(RealmName) ->
 record_topic(RealmName) ->
     macula_topic:app_fact(RealmName, ?KEEPER, <<"agora">>, <<"wire">>,
                           <<"agora_post_recorded">>, 1).
+
+%% @doc A contradiction on the record, said out loud under the keeper's own org.
+-spec conflict_topic(binary()) -> binary().
+conflict_topic(RealmName) ->
+    macula_topic:app_fact(RealmName, ?KEEPER, <<"agora">>, <<"wire">>,
+                          <<"agora_post_conflict_detected">>, 1).
 
 %% @doc The realm name the topics carry, from the app env.
 -spec realm_name() -> binary().
@@ -68,6 +98,8 @@ configured(Name, Other)     -> error({mcl_agora_realm_unset, Name, Other}).
 check_realm_name(Name, Tag) ->
     _ = square_topic(Name),
     _ = record_topic(Name),
+    _ = conflict_topic(Name),
+    _ = news_topic(Name),
     matched(crypto:hash(sha256, Name) =:= Tag, Name, Tag).
 
 matched(true, _Name, _Tag) -> ok;

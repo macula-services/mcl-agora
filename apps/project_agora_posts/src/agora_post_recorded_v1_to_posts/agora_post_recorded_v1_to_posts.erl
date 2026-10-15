@@ -46,7 +46,18 @@ row(PostId, Data) ->
       kind        => field(kind, Data),
       posted_at   => field(posted_at, Data),
       recorded_at => field(recorded_at, Data),
-      stimulus    => Stimulus}.
+      stimulus    => Stimulus,
+      %% A post recorded before the keeper checked anything carries neither
+      %% verdict. It reads as unchecked (0), never as verified: the page does
+      %% not show what nobody checked.
+      publisher_verified => verdict(field(publisher_verified, Data), 0),
+      stimulus_verified  => card_verdict(Stimulus, field(stimulus_verified, Data))}.
+
+verdict(V, _Default) when V =:= 0; V =:= 1 -> V;
+verdict(_Absent, Default) -> Default.
+
+card_verdict(undefined, _Verdict) -> undefined;
+card_verdict(_Card, Verdict) -> verdict(Verdict, 0).
 
 %% macula's frame decoder makes a key an atom only when that atom already
 %% exists in this VM, and leaves it as sent otherwise, so a round-tripped event

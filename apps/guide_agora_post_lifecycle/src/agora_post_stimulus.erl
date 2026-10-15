@@ -17,11 +17,15 @@
 %%% to an empty value -- a reader must be able to tell "the feed gave no image"
 %%% from "the image is blank".
 %%%
-%%% Nothing here is judged. In W1 a card is recorded as received and is
-%%% UNVERIFIED: nothing checks it against the news fact the keeper heard itself.
+%%% Nothing here is judged by decode/1: a card is normalised as received.
+%%% verified/2 is the judgement, and it is mechanical: a card is verified when
+%%% every field it carries is the field the keeper heard mcl-news report itself
+%%% (`heard_news_items'), normalised by this same decode/1, so a card that
+%%% changed one character of a title, added an image or named an item the
+%%% keeper never heard is not.
 -module(agora_post_stimulus).
 
--export([decode/1, to_wire/1, item_id/1]).
+-export([decode/1, to_wire/1, item_id/1, verified/2]).
 
 %% Text fields, in the order mcl-news publishes them.
 -define(TEXT_FIELDS, [title, summary, body, url, image_url, source, source_type,
@@ -43,6 +47,18 @@ kept(ItemId, Raw) when is_binary(ItemId), ItemId =/= <<>> ->
     maps:merge(#{item_id => ItemId}, optional(Raw));
 kept(_NoItemId, _Raw) ->
     undefined.
+
+%% @doc 1 when every field of `Card' equals the same field of `Heard', the item
+%% as the keeper heard mcl-news report it; 0 otherwise, including when the
+%% keeper never heard the item. Both are this module's normalised form.
+-spec verified(map(), map() | undefined) -> 0 | 1.
+verified(Card, Heard) when is_map(Card), is_map(Heard) ->
+    matched(maps:with(maps:keys(Card), Heard) =:= Card);
+verified(_Card, _NeverHeard) ->
+    0.
+
+matched(true)  -> 1;
+matched(false) -> 0.
 
 %% @doc The thread this post belongs to, or `undefined' when it answers nothing
 %% in particular.

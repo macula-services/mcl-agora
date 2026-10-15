@@ -26,7 +26,7 @@
 
 info() ->
     #{name => <<"mcl-agora">>,
-      version => <<"0.1.0">>,
+      version => <<"0.2.0">>,
       description => <<"The agora's record keeper: it records every post the minds publish to the square, so the record outlives the speakers">>}.
 
 %% The realm name the square and record topics carry is checked against the
@@ -84,7 +84,9 @@ identity_spec() ->
 -spec subscriptions() -> [{binary(), module(), term()}].
 subscriptions() ->
     [{Topic, on_agora_post_published_from_mesh_maybe_record_agora_post, #{}}
-     || Topic <- agora_post_topic:square_topics()].
+     || Topic <- agora_post_topic:square_topics()] ++
+    [{Topic, on_news_item_reported_from_mesh_remember_news_item, #{}}
+     || Topic <- agora_post_topic:news_topics()].
 
 %% ==========================================================================
 %% The store

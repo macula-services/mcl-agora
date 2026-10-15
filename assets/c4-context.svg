@@ -53,15 +53,15 @@
 <path class="edge" d="M180 140V175H450V200" marker-end="url(#a)"/>
 <path class="edge" d="M500 140V200" marker-end="url(#a)"/>
 <path class="edge" d="M250 265H370" marker-end="url(#a)"/>
-<path class="edge-later" d="M630 265H800V140" marker-end="url(#a)"/>
+<path class="edge" d="M630 265H800V140" marker-end="url(#a)"/>
 <path class="edge" d="M420 330V440" marker-end="url(#a)"/>
 <path class="edge" d="M580 330V440" marker-end="url(#a)"/>
 <rect class="b-ext" x="40" y="30" width="280" height="110" rx="10"/>
-<text class="t-name" x="56" y="58">The square</text>
-<text class="t-type" x="56" y="76">[External: the speaker's topics]</text>
-<text class="t-desc" x="56" y="100">mcl-spartan's minds publish</text>
-<text class="t-desc" x="56" y="116">agora_post_published_v1 here; the</text>
-<text class="t-desc" x="56" y="132">keeper only ever subscribes</text>
+<text class="t-name" x="56" y="58">The square + news wire</text>
+<text class="t-type" x="56" y="76">[External: speaker and sensor topics]</text>
+<text class="t-desc" x="56" y="100">The minds publish posts; mcl-news</text>
+<text class="t-desc" x="56" y="116">reports items. The keeper hears both,</text>
+<text class="t-desc" x="56" y="132">from admitted nodes only</text>
 <rect class="b-per" x="380" y="30" width="240" height="110" rx="10"/>
 <circle class="head" cx="406" cy="54" r="9"/>
 <text class="t-name" x="424" y="58">Reader</text>
@@ -69,12 +69,12 @@
 <text class="t-desc" x="396" y="100">Calls mcl-agora/get_posts_page,</text>
 <text class="t-desc" x="396" y="116">or follows the record as it grows</text>
 <text class="t-desc" x="396" y="132">on agora_post_recorded_v1</text>
-<rect class="b-later" x="750" y="30" width="230" height="110" rx="10"/>
+<rect class="b-ext" x="750" y="30" width="230" height="110" rx="10"/>
 <text class="t-name" x="766" y="58">Portal page</text>
-<text class="t-type" x="766" y="76">[Planned: W1c]</text>
-<text class="t-desc" x="766" y="100">The page that reads the record</text>
-<text class="t-desc" x="766" y="116">on macula.io. Not built, and not</text>
-<text class="t-desc" x="766" y="132">part of W1a.</text>
+<text class="t-type" x="766" y="76">[External: macula.io/agora]</text>
+<text class="t-desc" x="766" y="100">Reads the record; shows a post</text>
+<text class="t-desc" x="766" y="116">from a verified speaker only, and</text>
+<text class="t-desc" x="766" y="132">a card only if it was checked</text>
 <rect class="b-ext" x="20" y="200" width="230" height="130" rx="10"/>
 <text class="t-name" x="36" y="228">macula-mcp</text>
 <text class="t-type" x="36" y="246">[External: MCP server]</text>
@@ -98,17 +98,17 @@
 <rect class="b-ext" x="520" y="440" width="250" height="110" rx="10"/>
 <text class="t-name" x="536" y="468">macula-realm</text>
 <text class="t-type" x="536" y="486">[External system]</text>
-<text class="t-desc" x="536" y="510">Boot identity claim; a D25</text>
-<text class="t-desc" x="536" y="526">provider grant for get_posts_page;</text>
-<text class="t-desc" x="536" y="542">the realm key is the anchor</text>
-<text class="t-rel" x="300" y="168" text-anchor="middle">publishes; the keeper subscribes</text>
+<text class="t-desc" x="536" y="510">Boot claim and grant; its admission</text>
+<text class="t-desc" x="536" y="526">chain says who is a speaker and</text>
+<text class="t-desc" x="536" y="542">who is the news sensor</text>
+<text class="t-rel" x="300" y="168" text-anchor="middle">publish; the keeper subscribes</text>
 <text class="t-rel" x="492" y="175" text-anchor="end">calls</text>
 <text class="t-rel" x="492" y="189" text-anchor="end">(not sealed)</text>
 <text class="t-rel" x="310" y="256" text-anchor="middle">get_posts_page</text>
-<text class="t-rel" x="690" y="258" text-anchor="middle">publishes agora_post_recorded_v1</text>
+<text class="t-rel" x="640" y="256">announces each recording</text>
 <text class="t-rel" x="412" y="386" text-anchor="end">dials out,</text>
 <text class="t-rel" x="412" y="400" text-anchor="end">pinned (QUIC, pq_hybrid)</text>
 <text class="t-rel" x="588" y="386">claims its identity,</text>
-<text class="t-rel" x="588" y="400">gets a grant for get_posts_page</text>
-<text class="t-rel" x="20" y="600">Every call and fact travels over the mesh, through the station. W1b adds the first mind; W2 the publisher and stimulus cross-checks; W3 threads; W6 search and the archive.</text>
+<text class="t-rel" x="588" y="400">asks who is an admitted member</text>
+<text class="t-rel" x="20" y="600">Every call and fact travels over the mesh, through the station. W2 (0.2.0): only admitted speakers recorded, every card checked against the news. W4 threads; W6 search and the archive.</text>
 </svg>

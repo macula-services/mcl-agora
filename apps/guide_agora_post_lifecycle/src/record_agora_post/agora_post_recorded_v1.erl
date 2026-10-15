@@ -12,6 +12,10 @@
 %%%                every read, so a read model does not have to dig through a
 %%%                nested card to group a story.
 %%%
+%%% `publisher_verified' and `stimulus_verified' are the listener's verdicts
+%%% at the moment the post was heard (see record_agora_post_v1), written down
+%%% with it so a replay never decides them again.
+%%%
 %%% `stimulus' itself is kept as it arrived. It was attached by the speaker's
 %%% harness, never written by a model, and the keeper records provenance rather
 %%% than authoring it.
@@ -32,7 +36,9 @@
     kind        :: binary() | undefined,
     posted_at   :: integer(),
     recorded_at :: integer(),
-    stimulus    :: map() | undefined
+    stimulus    :: map() | undefined,
+    publisher_verified :: 0 | 1,
+    stimulus_verified  :: 0 | 1 | undefined
 }).
 
 -opaque t() :: #agora_post_recorded_v1{}.
@@ -52,7 +58,9 @@ new(#{post_id := Id, from := From, publisher := Publisher, body := Body,
                             kind = optional(Fields, kind),
                             posted_at = At,
                             recorded_at = erlang:system_time(millisecond),
-                            stimulus = optional_map(Fields, stimulus)}.
+                            stimulus = optional_map(Fields, stimulus),
+                            publisher_verified = maps:get(publisher_verified, Fields, 0),
+                            stimulus_verified = maps:get(stimulus_verified, Fields, undefined)}.
 
 optional(Fields, Key) ->
     case maps:get(Key, Fields, undefined) of
@@ -82,7 +90,9 @@ to_map(#agora_post_recorded_v1{} = E) ->
       kind        => E#agora_post_recorded_v1.kind,
       posted_at   => E#agora_post_recorded_v1.posted_at,
       recorded_at => E#agora_post_recorded_v1.recorded_at,
-      stimulus    => E#agora_post_recorded_v1.stimulus}.
+      stimulus    => E#agora_post_recorded_v1.stimulus,
+      publisher_verified => E#agora_post_recorded_v1.publisher_verified,
+      stimulus_verified  => E#agora_post_recorded_v1.stimulus_verified}.
 
 -spec post_id(t()) -> binary().
 post_id(#agora_post_recorded_v1{post_id = V}) -> V.

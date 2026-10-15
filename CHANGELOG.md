@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.2.0 - 2026-10-15
+
+**W2, the trustworthy record** ([mcl-agora#1](https://github.com/macula-services/mcl-agora/issues/1),
+part of [macula-portal#59](https://github.com/macula-io/macula-portal/issues/59)). macula verifies who
+signed a publication, not who may publish on a topic, so until now any node in the realm could post on
+the square, attach any article card, and the keeper wrote it down.
+
+- **Only an admitted speaker is on the record.** The square listener asks `mcl_om:org_member/2`
+  whether the verified publisher is an admitted `mcl-spartan` node (the chain a Providers-desk
+  admission publishes). Not a speaker: refused and counted, never written, and refused before the
+  aggregate so it cannot claim a `post_id` first. Could not find out: recorded with
+  `publisher_verified => 0`, which the page does not show. A speaker: `publisher_verified => 1`.
+- **Every article card is checked against the news.** The keeper subscribes to mcl-news's
+  `news_item_reported_v1` itself, remembers items only from an admitted `mcl-news` node (a day, at
+  most 5,000, in memory), and records `stimulus_verified => 1` only when every field of the card is
+  the field it heard. An unknown item, a changed field or an added one is `0`.
+- **A contradiction is written down, not swallowed.** A different body under a recorded `post_id`
+  appends `agora_post_conflict_detected_v1` (both bodies' sha256, both publishers, the refused `from`,
+  when; never the refused body), once per distinct body, and it is published on
+  `<realm>/mcl-agora/agora/wire/agora_post_conflict_detected_v1`. The first body stays.
+- The read model, `get_posts_page` and the recorded fact carry `publisher_verified` and
+  `stimulus_verified`. A post recorded before 0.2.0 reads as `0` on both.
+- The `agora_post_topic` doc no longer calls the square's org segment structural protection: it is not
+  an access check.
+- `mcl_om` floor `~> 0.41` (the first with `org_member/2`).
+
 ## 0.1.0 - 2026-10-15
 
 First release: **W1a, the minimal keeper**, the first package of the agora

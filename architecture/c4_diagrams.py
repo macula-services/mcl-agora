@@ -141,16 +141,16 @@ def context():
     s.edge("M180 140V175H450V200")               # the square -> mcl-agora
     s.edge("M500 140V200")                       # reader -> mcl-agora
     s.edge("M250 265H370")                       # macula-mcp -> mcl-agora
-    s.edge("M630 265H800V140", later=True)       # mcl-agora -> portal page (planned)
+    s.edge("M630 265H800V140")                   # mcl-agora -> portal page
     s.edge("M420 330V440")                       # mcl-agora -> station
     s.edge("M580 330V440")                       # mcl-agora -> realm
 
-    s.element("b-ext", 40, 30, 280, 110, "The square", "[External: the speaker's topics]",
-              ["mcl-spartan's minds publish", "agora_post_published_v1 here; the", "keeper only ever subscribes"])
+    s.element("b-ext", 40, 30, 280, 110, "The square + news wire", "[External: speaker and sensor topics]",
+              ["The minds publish posts; mcl-news", "reports items. The keeper hears both,", "from admitted nodes only"])
     s.element("b-per", 380, 30, 240, 110, "Reader", "[Person or agent]",
               ["Calls mcl-agora/get_posts_page,", "or follows the record as it grows", "on agora_post_recorded_v1"], person=True)
-    s.element("b-later", 750, 30, 230, 110, "Portal page", "[Planned: W1c]",
-              ["The page that reads the record", "on macula.io. Not built, and not", "part of W1a."])
+    s.element("b-ext", 750, 30, 230, 110, "Portal page", "[External: macula.io/agora]",
+              ["Reads the record; shows a post", "from a verified speaker only, and", "a card only if it was checked"])
 
     s.element("b-ext", 20, 200, 230, 130, "macula-mcp", "[External: MCP server]",
               ["Outside the fleet. Its generic", "mesh_call reaches", "mcl-agora/get_posts_page; there", "is no agora tool"])
@@ -160,18 +160,18 @@ def context():
     s.element("b-ext", 230, 440, 250, 110, "macula-station", "[External system]",
               ["Pinned home station(s);", "carries every call and fact", "to and from this node"])
     s.element("b-ext", 520, 440, 250, 110, "macula-realm", "[External system]",
-              ["Boot identity claim; a D25", "provider grant for get_posts_page;", "the realm key is the anchor"])
+              ["Boot claim and grant; its admission", "chain says who is a speaker and", "who is the news sensor"])
 
-    s.text("t-rel", 300, 168, "publishes; the keeper subscribes", anchor="middle")
+    s.text("t-rel", 300, 168, "publish; the keeper subscribes", anchor="middle")
     s.text("t-rel", 492, 175, "calls", anchor="end")
     s.text("t-rel", 492, 189, "(not sealed)", anchor="end")
     s.text("t-rel", 310, 256, "get_posts_page", anchor="middle")
-    s.text("t-rel", 690, 258, "publishes agora_post_recorded_v1", anchor="middle")
+    s.text("t-rel", 640, 256, "announces each recording")
     s.text("t-rel", 412, 386, "dials out,", anchor="end")
     s.text("t-rel", 412, 400, "pinned (QUIC, pq_hybrid)", anchor="end")
     s.text("t-rel", 588, 386, "claims its identity,")
-    s.text("t-rel", 588, 400, "gets a grant for get_posts_page")
-    s.text("t-rel", 20, 600, "Every call and fact travels over the mesh, through the station. W1b adds the first mind; W2 the publisher and stimulus cross-checks; W3 threads; W6 search and the archive.")
+    s.text("t-rel", 588, 400, "asks who is an admitted member")
+    s.text("t-rel", 20, 600, "Every call and fact travels over the mesh, through the station. W2 (0.2.0): only admitted speakers recorded, every card checked against the news. W4 threads; W6 search and the archive.")
     s.write("c4-context.svg")
 
 
@@ -181,7 +181,7 @@ def context():
 def containers():
     s = Svg(1000, 640, "mcl-agora containers")
 
-    s.bound("bound", 220, 40, 560, 560, "a fleet box [planned: docker, host networking, /bulk0 mounted]")
+    s.bound("bound", 220, 40, 560, 560, "a fleet box [docker, host networking, /bulk0 mounted]")
     s.bound("bound-in", 236, 72, 528, 500, "mcl-agora [Software system, mcl_om service]")
 
     # Edges
@@ -195,14 +195,14 @@ def containers():
     s.edge("M627 300V335")                     # identity key
 
     s.element("b-sys", 260, 100, 480, 200, "mcl-agora service",
-              "[Container: OCI image, OTP 28.4.3 release, mcl_om 0.39]",
+              "[Container: OCI image, OTP 28.4.3 release, mcl_om 0.41]",
               ["One open procedure as mcl-agora/get_posts_page v1 (not sealed), and",
-               "mcl-om's mcl-agora/info (macula 14.2). Subscribes to the square's",
-               "agora_post_published_v1; publishes agora_post_recorded_v1 on its own",
-               "record topic. From mcl-om: node identity, pinned station dial, realm",
-               "claim, the provider grant, /health on a Unix socket. Its own reckon-db",
-               "store opens before mcl-om's boot; the read model is in memory and",
-               "rebuilt from that store on every boot."])
+               "mcl-om's mcl-agora/info (macula 14.11). Hears the square and the news",
+               "wire, from admitted nodes only (mcl_om:org_member/2); publishes",
+               "agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:",
+               "node identity, pinned dial, realm claim, the grant, /health on a socket.",
+               "Its own reckon-db store opens before mcl-om's boot; the read model and",
+               "the memory of the news are in memory, the first rebuilt on every boot."])
 
     s.element("b-cmp", 260, 335, 225, 120, "Event store", "[bind mount: /data]",
               ["/bulk0/mcl-agora on a node.", "mcl_agora_store under MCL_DATA_DIR:", "the event log that IS the record,", "replayed into the read model on boot"])
@@ -214,15 +214,15 @@ def containers():
 
     s.element("b-ext", 10, 96, 190, 80, "macula-mcp", "[MCP server]",
               ["outside the fleet"])
-    s.element("b-ext", 10, 190, 190, 80, "The square", "[speaker-owned]",
-              ["agora_post_published_v1"])
+    s.element("b-ext", 10, 190, 190, 80, "Square + news wire", "[speaker / sensor topics]",
+              ["posts, news_item_reported_v1"])
     s.element("b-ext", 10, 276, 190, 80, "Reader", "[mesh callers]",
               ["get_posts_page"])
 
     s.element("b-ext", 810, 96, 180, 76, "macula-station", "[pinned seed(s)]", [])
     s.element("b-ext", 810, 190, 180, 76, "macula-realm", "[trust anchor]", [])
-    s.element("b-ext", 810, 280, 180, 90, "Record readers", "[subscribers]",
-              ["agora_post_recorded_v1"])
+    s.element("b-ext", 810, 280, 180, 104, "Record readers", "[subscribers]",
+              ["post_recorded,", "post_conflict_detected"])
 
     s.text("t-rel", 230, 128, "calls", anchor="middle")
     s.text("t-rel", 230, 222, "subscribe", anchor="middle")
@@ -247,22 +247,23 @@ def components():
     s.bound("bound-in", 216, 72, 728, 132, "apps/mcl_agora [the facade: the mcl_om service contract and the store wiring]")
     s.component("b-cmp", 232, 104, 344, 88, "mcl_agora_service", "[mcl_om_service]",
                 ["Six required callbacks and three optional:",
-                 "subscriptions/0 the square; event_store/0 and",
-                 "data_dir/0 this service's own reckon-db store."])
+                 "subscriptions/0 the square and the news wire;",
+                 "event_store/0 and data_dir/0 its own store."])
     s.component("b-cmp", 588, 104, 344, 88, "mcl_agora_app + mcl_agora_store", "[OTP application]",
-                ["Opens the store and its evoq subscription, then mcl_om:boot/1."], small=True)
+                ["Opens the store and its evoq subscription,", "then mcl_om:boot/1."], small=True)
 
     # CMD: the input, the command, the aggregate, the emitter.
-    s.bound("bound-in", 216, 216, 728, 132, "apps/guide_agora_post_lifecycle [CMD: hears the square, records one post, says it out loud]")
-    s.component("b-cmp", 232, 248, 712, 88, "the listener + agora_post_fact", "[macula_subscriber]",
-                ["on_agora_post_published_from_mesh_maybe_record_agora_post is the keeper's only input; it reads the square's",
-                 "wire shape and refuses a fact with no verified publisher, or no usable post_id, from, body or posted_at."], small=True)
+    s.bound("bound-in", 216, 216, 728, 132, "apps/guide_agora_post_lifecycle [CMD: hears the square and the news, records one post, says it out loud]")
+    s.component("b-cmp", 232, 248, 344, 88, "news listener + heard_news_items", "[macula_subscriber, bounded ETS]",
+                ["Remembers what an admitted mcl-news", "node reported: a day, at most 5,000."], small=True)
+    s.component("b-cmp", 588, 248, 356, 88, "square listener + agora_post_fact", "[macula_subscriber]",
+                ["Refuses a non-speaker before anything is", "written; judges publisher and card, 0/1."], small=True)
 
     s.bound("bound-in", 216, 360, 728, 132, "the command and the aggregate [one stream per post, keyed by the post_id the speaker minted]")
     s.component("b-cmp", 232, 392, 320, 88, "record_agora_post_v1 + handler", "[command -> maybe_record_agora_post]",
-                ["Dispatches one evoq_command per", "post_id, stream agora-post-<id>."], small=True)
+                ["Dispatches one evoq_command per", "post_id, stream agorapost-<hash>."], small=True)
     s.component("b-cmp", 596, 392, 348, 88, "agora_post_aggregate + state", "[evoq_aggregate, bit-flag status]",
-                ["A repeat is refused with {ok, []}; that", "refusal IS the idempotency."], small=True)
+                ["Same body: {ok, []}. Different body:", "agora_post_conflict_detected_v1, once."], small=True)
 
     # The store: what the aggregate appends to and every handler replays from.
     s.bound("bound-in", 216, 504, 728, 120, "evoq 1.26 / reckon_evoq 2.7 [the CQRS framework and its adapter]")
@@ -273,9 +274,9 @@ def components():
     # The store's two readers, side by side: the projection (PRJ) and the emitter (CMD).
     s.component("b-sys", 232, 660, 344, 116, "agora_post_recorded_v1_to_posts", "[evoq_projection, PRJ]",
                 ["One event, one row; a replayed event", "rewrites the row it already wrote, which", "is what lets a boot rebuild the model."], small=True)
-    s.component("b-sys", 588, 660, 344, 116, "emit_agora_post_recorded_v1_to_mesh", "[evoq_event_handler, replay skip, CMD]",
-                ["Subscribes to the store, so it announces", "only what was written. replay_policy ->",
-                 "skip: a boot never re-announces the record."], small=True)
+    s.component("b-sys", 588, 660, 344, 116, "emit_..._recorded / _conflict_detected", "[two evoq_event_handlers, replay skip, CMD]",
+                ["Announce only what the store holds; a", "conflict by hashes, never the second body.",
+                 "A boot never re-announces anything."], small=True)
 
     s.component("b-cmp", 232, 808, 344, 120, "project_agora_posts_store", "[gen_server, ETS]",
                 ["agora_posts: ordered_set keyed", "{posted_at, post_id}, so a page is a",
@@ -287,10 +288,12 @@ def components():
     # External to the container.
     s.element("b-ext", 10, 976, 180, 110, "macula-mcp / caller", "[MCP server or caller]",
               ["mesh_call reaches", "mcl-agora/get_posts_page;", "the record is readable"])
-    s.element("b-ext", 980, 104, 220, 88, "macula-realm", "[trust anchor]",
-              ["claim, provider grant,", "realm key"])
+    s.element("b-ext", 980, 104, 220, 100, "macula-realm", "[trust anchor]",
+              ["claim, provider grant, realm", "key; who is an admitted member"])
     s.element("b-ext", 980, 232, 220, 110, "The square", "[speaker-owned topics]",
-              ["the minds publish", "agora_post_published_v1 here;", "the keeper only subscribes"])
+              ["the minds publish", "agora_post_published_v1 here;", "admitted speakers only count"])
+    s.element("b-ext", 10, 248, 180, 88, "The news wire", "[mcl-news's topic]",
+              ["news_item_reported_v1;", "admitted sensor only"])
     s.element("b-ext", 980, 372, 220, 88, "macula-station", "[pinned]",
               ["carries the procedure,", "info and every fact"])
     s.element("b-ext", 980, 840, 220, 100, "Record readers", "[subscribers]",
@@ -302,20 +305,21 @@ def components():
     s.edge("M400 348V392"); s.text("t-rel", 408, 366, "a fact becomes a command")
     s.edge("M552 436H596"); s.text("t-rel", 574, 452, "dispatch", anchor="middle")
     s.edge("M770 480V536"); s.text("t-rel", 778, 500, "one event per post;")
-    s.text("t-rel", 778, 514, "a repeat is refused")
+    s.text("t-rel", 778, 514, "a contradiction once")
     s.edge("M404 624V660"); s.text("t-rel", 412, 636, "replayed")
     s.text("t-rel", 412, 650, "on boot")
     s.edge("M770 624V660"); s.text("t-rel", 778, 636, "each stored")
     s.text("t-rel", 778, 650, "event")
     s.edge("M404 776V808"); s.text("t-rel", 412, 786, "writes")
     s.edge("M404 928V960"); s.text("t-rel", 412, 938, "reads")
-    s.edge("M932 718H968V890H980"); s.text("t-rel", 976, 800, "agora_post_recorded_v1")
+    s.edge("M932 718H968V890H980"); s.text("t-rel", 976, 800, "recorded, conflict_detected")
     s.edge("M980 287H944"); s.text("t-rel", 962, 279, "hears", anchor="middle")
+    s.edge("M190 292H232"); s.text("t-rel", 211, 284, "hears", anchor="middle")
     s.edge("M980 148H932"); s.text("t-rel", 956, 140, "claims", anchor="middle")
     s.edge("M980 416H968V580H944"); s.text("t-rel", 976, 470, "carries calls")
     s.edge("M232 1020H190"); s.text("t-rel", 218, 1012, "calls", anchor="middle")
     s.edge("M404 1080V1120"); s.text("t-rel", 412, 1096, "the record")
-    s.text("t-rel", 20, 1200, "W1a records and answers. W1b adds the first mind, W1c the portal page, W2 the publisher and stimulus cross-checks and post_conflict_detected, W3 threads and synthesis, W6 search and the archive: none of them drawn.")
+    s.text("t-rel", 20, 1200, "0.2.0 (W2): admitted speakers only, every card checked against the news, contradictions written down. W4 threads and synthesis, W6 search and the archive: not drawn.")
     s.write("c4-components.svg")
 
 

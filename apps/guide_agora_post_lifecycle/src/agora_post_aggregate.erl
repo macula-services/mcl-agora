@@ -8,6 +8,10 @@
 %%% That refusal IS the idempotency: no second event, so no second
 %%% `agora_post_recorded_v1', so no second fact on the mesh and no second
 %%% read-model write. A repeat is heard and counted, and nothing else happens.
+%%%
+%%% A repeat with a DIFFERENT body is not a repeat: it is the one thing the
+%%% record must not swallow, and it produces `agora_post_conflict_detected_v1'
+%%% while the first body stays on the record.
 -module(agora_post_aggregate).
 
 -behaviour(evoq_aggregate).
@@ -57,12 +61,26 @@ apply(State, Event) ->
 %% there, not from the type evoq_command:new/4 was handed), which is why
 %% record_agora_post_v1:to_map/1 spells it as a binary.
 execute(State, #{command_type := <<"record_agora_post">>} = Payload) ->
-    recorded(agora_post_state:recorded(State), Payload);
+    recorded(agora_post_state:recorded(State), State, Payload);
 execute(_State, _Payload) ->
     {error, unknown_command}.
 
-recorded(true, _Payload) ->
-    %% Already on the record. The no-op: the caller reads it as a duplicate.
+recorded(false, _State, Payload) ->
+    maybe_record_agora_post:handle_from_map(Payload);
+recorded(true, State, #{body := Body} = Payload) ->
+    heard_again(agora_post_state:digest(Body), State, Payload).
+
+%% THREE OUTCOMES FOR A POST_ID ALREADY ON THE RECORD, decided by the body
+%% alone. The same body is a redelivery: the sanctioned no-op, which the
+%% caller reads as a duplicate. A different body is a contradiction, written
+%% down once per distinct body: a second delivery of the same contradiction is
+%% a redelivery of it, and a no-op too.
+heard_again(Hash, State, Payload) ->
+    contradiction(Hash =:= agora_post_state:body_sha256(State) orelse
+                      agora_post_state:refused(State, Hash),
+                  State, Payload).
+
+contradiction(true, _State, _Payload) ->
     {ok, []};
-recorded(false, Payload) ->
-    maybe_record_agora_post:handle_from_map(Payload).
+contradiction(false, State, Payload) ->
+    {ok, [agora_post_conflict_detected_v1:to_map(agora_post_conflict_detected_v1:detected(State, Payload))]}.

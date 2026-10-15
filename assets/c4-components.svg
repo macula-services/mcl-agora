@@ -58,31 +58,37 @@
 <text class="t-code" x="246" y="128">mcl_agora_service</text>
 <text class="t-type" x="564" y="128" text-anchor="end">[mcl_om_service]</text>
 <text class="t-desc" x="246" y="150">Six required callbacks and three optional:</text>
-<text class="t-desc" x="246" y="166">subscriptions/0 the square; event_store/0 and</text>
-<text class="t-desc" x="246" y="182">data_dir/0 this service's own reckon-db store.</text>
+<text class="t-desc" x="246" y="166">subscriptions/0 the square and the news wire;</text>
+<text class="t-desc" x="246" y="182">event_store/0 and data_dir/0 its own store.</text>
 <rect class="b-cmp" x="588" y="104" width="344" height="88" rx="8"/>
 <text class="t-code t-small" x="602" y="128">mcl_agora_app + mcl_agora_store</text>
 <text class="t-type" x="602" y="146">[OTP application]</text>
-<text class="t-desc" x="602" y="166">Opens the store and its evoq subscription, then mcl_om:boot/1.</text>
+<text class="t-desc" x="602" y="166">Opens the store and its evoq subscription,</text>
+<text class="t-desc" x="602" y="182">then mcl_om:boot/1.</text>
 <rect class="bound-in" x="216" y="216" width="728" height="132" rx="10"/>
-<text class="t-bound" x="232" y="238">apps/guide_agora_post_lifecycle [CMD: hears the square, records one post, says it out loud]</text>
-<rect class="b-cmp" x="232" y="248" width="712" height="88" rx="8"/>
-<text class="t-code t-small" x="246" y="272">the listener + agora_post_fact</text>
-<text class="t-type" x="246" y="290">[macula_subscriber]</text>
-<text class="t-desc" x="246" y="310">on_agora_post_published_from_mesh_maybe_record_agora_post is the keeper's only input; it reads the square's</text>
-<text class="t-desc" x="246" y="326">wire shape and refuses a fact with no verified publisher, or no usable post_id, from, body or posted_at.</text>
+<text class="t-bound" x="232" y="238">apps/guide_agora_post_lifecycle [CMD: hears the square and the news, records one post, says it out loud]</text>
+<rect class="b-cmp" x="232" y="248" width="344" height="88" rx="8"/>
+<text class="t-code t-small" x="246" y="272">news listener + heard_news_items</text>
+<text class="t-type" x="246" y="290">[macula_subscriber, bounded ETS]</text>
+<text class="t-desc" x="246" y="310">Remembers what an admitted mcl-news</text>
+<text class="t-desc" x="246" y="326">node reported: a day, at most 5,000.</text>
+<rect class="b-cmp" x="588" y="248" width="356" height="88" rx="8"/>
+<text class="t-code t-small" x="602" y="272">square listener + agora_post_fact</text>
+<text class="t-type" x="602" y="290">[macula_subscriber]</text>
+<text class="t-desc" x="602" y="310">Refuses a non-speaker before anything is</text>
+<text class="t-desc" x="602" y="326">written; judges publisher and card, 0/1.</text>
 <rect class="bound-in" x="216" y="360" width="728" height="132" rx="10"/>
 <text class="t-bound" x="232" y="382">the command and the aggregate [one stream per post, keyed by the post_id the speaker minted]</text>
 <rect class="b-cmp" x="232" y="392" width="320" height="88" rx="8"/>
 <text class="t-code t-small" x="246" y="416">record_agora_post_v1 + handler</text>
 <text class="t-type" x="246" y="434">[command -&gt; maybe_record_agora_post]</text>
 <text class="t-desc" x="246" y="454">Dispatches one evoq_command per</text>
-<text class="t-desc" x="246" y="470">post_id, stream agora-post-&lt;id&gt;.</text>
+<text class="t-desc" x="246" y="470">post_id, stream agorapost-&lt;hash&gt;.</text>
 <rect class="b-cmp" x="596" y="392" width="348" height="88" rx="8"/>
 <text class="t-code t-small" x="610" y="416">agora_post_aggregate + state</text>
 <text class="t-type" x="610" y="434">[evoq_aggregate, bit-flag status]</text>
-<text class="t-desc" x="610" y="454">A repeat is refused with {ok, []}; that</text>
-<text class="t-desc" x="610" y="470">refusal IS the idempotency.</text>
+<text class="t-desc" x="610" y="454">Same body: {ok, []}. Different body:</text>
+<text class="t-desc" x="610" y="470">agora_post_conflict_detected_v1, once.</text>
 <rect class="bound-in" x="216" y="504" width="728" height="120" rx="10"/>
 <text class="t-bound" x="232" y="526">evoq 1.26 / reckon_evoq 2.7 [the CQRS framework and its adapter]</text>
 <rect class="b-cmp" x="232" y="536" width="712" height="88" rx="8"/>
@@ -97,11 +103,11 @@
 <text class="t-desc" x="246" y="738">rewrites the row it already wrote, which</text>
 <text class="t-desc" x="246" y="754">is what lets a boot rebuild the model.</text>
 <rect class="b-sys" x="588" y="660" width="344" height="116" rx="8"/>
-<text class="t-code t-small" x="602" y="684">emit_agora_post_recorded_v1_to_mesh</text>
-<text class="t-type" x="602" y="702">[evoq_event_handler, replay skip, CMD]</text>
-<text class="t-desc" x="602" y="722">Subscribes to the store, so it announces</text>
-<text class="t-desc" x="602" y="738">only what was written. replay_policy -&gt;</text>
-<text class="t-desc" x="602" y="754">skip: a boot never re-announces the record.</text>
+<text class="t-code t-small" x="602" y="684">emit_..._recorded / _conflict_detected</text>
+<text class="t-type" x="602" y="702">[two evoq_event_handlers, replay skip, CMD]</text>
+<text class="t-desc" x="602" y="722">Announce only what the store holds; a</text>
+<text class="t-desc" x="602" y="738">conflict by hashes, never the second body.</text>
+<text class="t-desc" x="602" y="754">A boot never re-announces anything.</text>
 <rect class="b-cmp" x="232" y="808" width="344" height="120" rx="8"/>
 <text class="t-code t-small" x="246" y="832">project_agora_posts_store</text>
 <text class="t-type" x="246" y="850">[gen_server, ETS]</text>
@@ -122,17 +128,22 @@
 <text class="t-desc" x="26" y="1046">mesh_call reaches</text>
 <text class="t-desc" x="26" y="1062">mcl-agora/get_posts_page;</text>
 <text class="t-desc" x="26" y="1078">the record is readable</text>
-<rect class="b-ext" x="980" y="104" width="220" height="88" rx="10"/>
+<rect class="b-ext" x="980" y="104" width="220" height="100" rx="10"/>
 <text class="t-name" x="996" y="132">macula-realm</text>
 <text class="t-type" x="996" y="150">[trust anchor]</text>
-<text class="t-desc" x="996" y="174">claim, provider grant,</text>
-<text class="t-desc" x="996" y="190">realm key</text>
+<text class="t-desc" x="996" y="174">claim, provider grant, realm</text>
+<text class="t-desc" x="996" y="190">key; who is an admitted member</text>
 <rect class="b-ext" x="980" y="232" width="220" height="110" rx="10"/>
 <text class="t-name" x="996" y="260">The square</text>
 <text class="t-type" x="996" y="278">[speaker-owned topics]</text>
 <text class="t-desc" x="996" y="302">the minds publish</text>
 <text class="t-desc" x="996" y="318">agora_post_published_v1 here;</text>
-<text class="t-desc" x="996" y="334">the keeper only subscribes</text>
+<text class="t-desc" x="996" y="334">admitted speakers only count</text>
+<rect class="b-ext" x="10" y="248" width="180" height="88" rx="10"/>
+<text class="t-name" x="26" y="276">The news wire</text>
+<text class="t-type" x="26" y="294">[mcl-news's topic]</text>
+<text class="t-desc" x="26" y="318">news_item_reported_v1;</text>
+<text class="t-desc" x="26" y="334">admitted sensor only</text>
 <rect class="b-ext" x="980" y="372" width="220" height="88" rx="10"/>
 <text class="t-name" x="996" y="400">macula-station</text>
 <text class="t-type" x="996" y="418">[pinned]</text>
@@ -154,7 +165,7 @@
 <text class="t-rel" x="574" y="452" text-anchor="middle">dispatch</text>
 <path class="edge" d="M770 480V536" marker-end="url(#a)"/>
 <text class="t-rel" x="778" y="500">one event per post;</text>
-<text class="t-rel" x="778" y="514">a repeat is refused</text>
+<text class="t-rel" x="778" y="514">a contradiction once</text>
 <path class="edge" d="M404 624V660" marker-end="url(#a)"/>
 <text class="t-rel" x="412" y="636">replayed</text>
 <text class="t-rel" x="412" y="650">on boot</text>
@@ -166,9 +177,11 @@
 <path class="edge" d="M404 928V960" marker-end="url(#a)"/>
 <text class="t-rel" x="412" y="938">reads</text>
 <path class="edge" d="M932 718H968V890H980" marker-end="url(#a)"/>
-<text class="t-rel" x="976" y="800">agora_post_recorded_v1</text>
+<text class="t-rel" x="976" y="800">recorded, conflict_detected</text>
 <path class="edge" d="M980 287H944" marker-end="url(#a)"/>
 <text class="t-rel" x="962" y="279" text-anchor="middle">hears</text>
+<path class="edge" d="M190 292H232" marker-end="url(#a)"/>
+<text class="t-rel" x="211" y="284" text-anchor="middle">hears</text>
 <path class="edge" d="M980 148H932" marker-end="url(#a)"/>
 <text class="t-rel" x="956" y="140" text-anchor="middle">claims</text>
 <path class="edge" d="M980 416H968V580H944" marker-end="url(#a)"/>
@@ -177,5 +190,5 @@
 <text class="t-rel" x="218" y="1012" text-anchor="middle">calls</text>
 <path class="edge" d="M404 1080V1120" marker-end="url(#a)"/>
 <text class="t-rel" x="412" y="1096">the record</text>
-<text class="t-rel" x="20" y="1200">W1a records and answers. W1b adds the first mind, W1c the portal page, W2 the publisher and stimulus cross-checks and post_conflict_detected, W3 threads and synthesis, W6 search and the archive: none of them drawn.</text>
+<text class="t-rel" x="20" y="1200">0.2.0 (W2): admitted speakers only, every card checked against the news, contradictions written down. W4 threads and synthesis, W6 search and the archive: not drawn.</text>
 </svg>

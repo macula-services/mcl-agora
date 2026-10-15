@@ -68,3 +68,25 @@ card() ->
       <<"source">>       => {text, <<"france24">>},
       <<"published_at">> => 1759999000000,
       <<"topics">>       => [{text, <<"world">>}, {text, <<"europe">>}]}.
+
+%%------------------------------------------------------------------------------
+%% verified/2 (W2): a card is real when every field it carries is the field the
+%% keeper heard mcl-news report.
+
+-define(HEARD, heard()).
+heard() -> #{item_id => <<"i">>, title => <<"T">>, url => <<"https://u">>, published_at => 1}.
+
+a_card_that_is_a_subset_of_what_was_heard_is_verified_test() ->
+    ?assertEqual(1, agora_post_stimulus:verified(#{item_id => <<"i">>, title => <<"T">>}, ?HEARD)).
+
+a_card_that_is_exactly_what_was_heard_is_verified_test() ->
+    ?assertEqual(1, agora_post_stimulus:verified(?HEARD, ?HEARD)).
+
+a_card_with_a_changed_field_is_not_verified_test() ->
+    ?assertEqual(0, agora_post_stimulus:verified(maps:put(title, <<"Other">>, heard()), heard())).
+
+a_card_with_a_field_the_news_never_reported_is_not_verified_test() ->
+    ?assertEqual(0, agora_post_stimulus:verified(maps:put(image_url, <<"https://evil">>, heard()), heard())).
+
+a_card_for_an_item_never_heard_is_not_verified_test() ->
+    ?assertEqual(0, agora_post_stimulus:verified(?HEARD, undefined)).

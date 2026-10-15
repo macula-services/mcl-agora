@@ -51,7 +51,7 @@
 <rect class="bg" x="0" y="0" width="1000" height="640"/>
 
 <rect class="bound" x="220" y="40" width="560" height="560" rx="12"/>
-<text class="t-bound" x="236" y="62">a fleet box [planned: docker, host networking, /bulk0 mounted]</text>
+<text class="t-bound" x="236" y="62">a fleet box [docker, host networking, /bulk0 mounted]</text>
 <rect class="bound-in" x="236" y="72" width="528" height="500" rx="10"/>
 <text class="t-bound" x="252" y="94">mcl-agora [Software system, mcl_om service]</text>
 <path class="edge" d="M200 136H260" marker-end="url(#a)"/>
@@ -64,14 +64,14 @@
 <path class="edge" d="M627 300V335" marker-end="url(#a)"/>
 <rect class="b-sys" x="260" y="100" width="480" height="200" rx="10"/>
 <text class="t-name" x="276" y="128">mcl-agora service</text>
-<text class="t-type" x="276" y="146">[Container: OCI image, OTP 28.4.3 release, mcl_om 0.39]</text>
+<text class="t-type" x="276" y="146">[Container: OCI image, OTP 28.4.3 release, mcl_om 0.41]</text>
 <text class="t-desc" x="276" y="170">One open procedure as mcl-agora/get_posts_page v1 (not sealed), and</text>
-<text class="t-desc" x="276" y="186">mcl-om's mcl-agora/info (macula 14.2). Subscribes to the square's</text>
-<text class="t-desc" x="276" y="202">agora_post_published_v1; publishes agora_post_recorded_v1 on its own</text>
-<text class="t-desc" x="276" y="218">record topic. From mcl-om: node identity, pinned station dial, realm</text>
-<text class="t-desc" x="276" y="234">claim, the provider grant, /health on a Unix socket. Its own reckon-db</text>
-<text class="t-desc" x="276" y="250">store opens before mcl-om's boot; the read model is in memory and</text>
-<text class="t-desc" x="276" y="266">rebuilt from that store on every boot.</text>
+<text class="t-desc" x="276" y="186">mcl-om's mcl-agora/info (macula 14.11). Hears the square and the news</text>
+<text class="t-desc" x="276" y="202">wire, from admitted nodes only (mcl_om:org_member/2); publishes</text>
+<text class="t-desc" x="276" y="218">agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:</text>
+<text class="t-desc" x="276" y="234">node identity, pinned dial, realm claim, the grant, /health on a socket.</text>
+<text class="t-desc" x="276" y="250">Its own reckon-db store opens before mcl-om's boot; the read model and</text>
+<text class="t-desc" x="276" y="266">the memory of the news are in memory, the first rebuilt on every boot.</text>
 <rect class="b-cmp" x="260" y="335" width="225" height="120" rx="10"/>
 <text class="t-name" x="276" y="363">Event store</text>
 <text class="t-type" x="276" y="381">[bind mount: /data]</text>
@@ -93,9 +93,9 @@
 <text class="t-type" x="26" y="142">[MCP server]</text>
 <text class="t-desc" x="26" y="166">outside the fleet</text>
 <rect class="b-ext" x="10" y="190" width="190" height="80" rx="10"/>
-<text class="t-name" x="26" y="218">The square</text>
-<text class="t-type" x="26" y="236">[speaker-owned]</text>
-<text class="t-desc" x="26" y="260">agora_post_published_v1</text>
+<text class="t-name" x="26" y="218">Square + news wire</text>
+<text class="t-type" x="26" y="236">[speaker / sensor topics]</text>
+<text class="t-desc" x="26" y="260">posts, news_item_reported_v1</text>
 <rect class="b-ext" x="10" y="276" width="190" height="80" rx="10"/>
 <text class="t-name" x="26" y="304">Reader</text>
 <text class="t-type" x="26" y="322">[mesh callers]</text>
@@ -106,10 +106,11 @@
 <rect class="b-ext" x="810" y="190" width="180" height="76" rx="10"/>
 <text class="t-name" x="826" y="218">macula-realm</text>
 <text class="t-type" x="826" y="236">[trust anchor]</text>
-<rect class="b-ext" x="810" y="280" width="180" height="90" rx="10"/>
+<rect class="b-ext" x="810" y="280" width="180" height="104" rx="10"/>
 <text class="t-name" x="826" y="308">Record readers</text>
 <text class="t-type" x="826" y="326">[subscribers]</text>
-<text class="t-desc" x="826" y="350">agora_post_recorded_v1</text>
+<text class="t-desc" x="826" y="350">post_recorded,</text>
+<text class="t-desc" x="826" y="366">post_conflict_detected</text>
 <text class="t-rel" x="230" y="128" text-anchor="middle">calls</text>
 <text class="t-rel" x="230" y="222" text-anchor="middle">subscribe</text>
 <text class="t-rel" x="230" y="308" text-anchor="middle">reads</text>
