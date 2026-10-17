@@ -64,9 +64,9 @@
 <path class="edge" d="M627 300V335" marker-end="url(#a)"/>
 <rect class="b-sys" x="260" y="100" width="480" height="200" rx="10"/>
 <text class="t-name" x="276" y="128">mcl-agora service</text>
-<text class="t-type" x="276" y="146">[Container: OCI image, OTP 28.4.3 release, mcl_om 0.41]</text>
+<text class="t-type" x="276" y="146">[Container: OCI image, OTP 28.4.3 release, mcl_om 1.0]</text>
 <text class="t-desc" x="276" y="170">One open procedure as mcl-agora/get_posts_page v1 (not sealed), and</text>
-<text class="t-desc" x="276" y="186">mcl-om's mcl-agora/info (macula 14.11). Hears the square and the news</text>
+<text class="t-desc" x="276" y="186">mcl-om's mcl-agora/info (macula 15.6). Hears the square and the news</text>
 <text class="t-desc" x="276" y="202">wire, from admitted nodes only (mcl_om:org_member/2); publishes</text>
 <text class="t-desc" x="276" y="218">agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:</text>
 <text class="t-desc" x="276" y="234">node identity, pinned dial, realm claim, the grant, /health on a socket.</text>
