@@ -1,6 +1,6 @@
 {application, query_agora_posts, [
     {description, "QRY: the get_posts_page query over the mcl-agora record"},
-    {vsn, "0.2.0"},
+    {vsn, "0.4.0"},
     {registered, [query_agora_posts_sup]},
     {mod, {query_agora_posts_app, []}},
     %% The read model it answers from, and the CMD app that owns the wire shape

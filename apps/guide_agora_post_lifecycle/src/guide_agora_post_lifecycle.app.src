@@ -1,6 +1,6 @@
 {application, guide_agora_post_lifecycle, [
     {description, "CMD: the listener on the square and the agora_post record for mcl-agora"},
-    {vsn, "0.2.0"},
+    {vsn, "0.4.0"},
     {registered, [guide_agora_post_lifecycle_sup]},
     {mod, {guide_agora_post_lifecycle_app, []}},
     {applications, [kernel, stdlib, macula, mcl_om, evoq, reckon_evoq]},
