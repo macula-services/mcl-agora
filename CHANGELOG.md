@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Changed
+
+- **The base library is macula 16** (macula-codebase-checks#4). The floor moves
+  `~> 15.6` to `~> 16.0`, and `mcl_om` from `~> 1.0` to `~> 1.4`, the mcl_om
+  whose own base is macula 16. 16.0 keeps wire 1.0, so this service still speaks
+  to every wire 1.0 box; what it brings is the revocation bound (macula#118):
+  an endorsement admits its holder for at most 24 hours, and a gated overlay
+  context must pass `member_standing`. This service gates no overlay and issues
+  no endorsement, so nothing changes for it.
+
 ### Fixed
 
 - Every app the release names carries the release version (mcl-agora#3). The desk

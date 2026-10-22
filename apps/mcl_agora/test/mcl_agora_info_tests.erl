@@ -8,7 +8,7 @@
 %%
 %% The version floors are rebar.config's floors, so a resolve OLDER than the
 %% declared line fails here. They do not hold the wire: forward drift onto
-%% macula 16 passes these floors, and what refuses that is the `~> 15.6'
+%% macula 17 passes these floors, and what refuses that is the `~> 16.0'
 %% constraint, at resolve time.
 -module(mcl_agora_info_tests).
 
@@ -31,10 +31,10 @@ info_round_trip_test_() ->
           %% Every value that is not a number or a nested list is text: a bare
           %% binary would reach a non-BEAM reader as bytes.
           ?_assertEqual([], [V || V <- lists:flatten(maps:values(Reply)), is_binary(V)]),
-          %% Floors, not exact minors: the pairing that matters is mcl_om 1.0
-          %% or later WITH macula 15.6 or later.
-          ?_assert(at_least(maps:get(mcl_om_version, Reply), [1, 0])),
-          ?_assert(at_least(maps:get(macula_version, Reply), [15, 6]))]
+          %% Floors, not exact minors: the pairing that matters is mcl_om 1.4
+          %% or later WITH macula 16.0 or later.
+          ?_assert(at_least(maps:get(mcl_om_version, Reply), [1, 4])),
+          ?_assert(at_least(maps:get(macula_version, Reply), [16, 0]))]
      end}.
 
 %% The service must leave `info' to mcl_om: declaring its own refuses boot.
