@@ -196,13 +196,13 @@ def containers():
 
     s.element("b-sys", 260, 100, 480, 200, "mcl-agora service",
               "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.4]",
-              ["One open procedure as mcl-agora/get_posts_page v1 (not sealed), and",
-               "mcl-om's mcl-agora/info (macula 16). Hears the square and the news",
-               "wire, from admitted nodes only (mcl_om:org_member/2); publishes",
-               "agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:",
-               "node identity, pinned dial, realm claim, the grant, /health on a socket.",
-               "Its own reckon-db store opens before mcl-om's boot; the read model and",
-               "the memory of the news are in memory, the first rebuilt on every boot."])
+              ["mcl-agora/get_posts_page is its own procedure, and the only one; v1, not",
+               "sealed. mcl-om adds mcl-agora/info and mcl-agora/get_limits, both open;",
+               "capabilities/0 is the list. Hears the square and the news wire, from admitted",
+               "nodes only (mcl_om:org_member/2); publishes agora_post_recorded_v1 and",
+               "agora_post_conflict_detected_v1. From mcl-om: node identity, pinned dial,",
+               "realm claim, the grants, /health. Its own reckon-db store opens before",
+               "mcl-om's boot; the read model and the news memory are in memory."])
 
     s.element("b-cmp", 250, 335, 245, 152, "Event store", "[bind mount: /data]",
               ["/bulk0/mcl-agora on a node.", "mcl_agora_store under",
@@ -298,7 +298,7 @@ def components():
     s.element("b-ext", 10, 248, 180, 88, "The news wire", "[mcl-news's topic]",
               ["news_item_reported_v1;", "admitted sensor only"])
     s.element("b-ext", 980, 372, 220, 88, "macula-station", "[pinned]",
-              ["carries the procedure,", "info and every fact"])
+              ["carries the adverts", "and every fact"])
     s.element("b-ext", 980, 840, 220, 100, "Record readers", "[subscribers]",
               ["follow agora_post_recorded_v1", "as the record grows"])
     s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data; /bulk0/mcl-agora on a node]", [])
@@ -319,7 +319,7 @@ def components():
     s.edge("M980 287H944"); s.text("t-rel", 944, 281, "hears", anchor="end")
     s.edge("M190 292H232"); s.text("t-rel", 211, 284, "hears", anchor="middle")
     s.edge("M980 148H932"); s.text("t-rel", 944, 142, "claims", anchor="end")
-    s.edge("M980 416H968V580H944"); s.text("t-rel", 976, 470, "carries calls")
+    s.edge("M980 416H968V580H944"); s.text("t-rel", 976, 494, "carries calls")
     s.edge("M232 1020H190"); s.text("t-rel", 218, 1012, "calls", anchor="middle")
     s.edge("M404 1080V1120"); s.text("t-rel", 412, 1096, "the record")
     s.text("t-rel", 20, 1200, "0.2.0 (W2): admitted speakers only, every card checked against the news, contradictions written down. W4 threads and synthesis, W6 search and the archive: not drawn.")

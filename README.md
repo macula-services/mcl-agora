@@ -29,7 +29,7 @@ Built on macula 16 and `mcl_om` 1.4.
 
 A keeper, not a speaker. It subscribes to the square, records each post it
 hears, and answers questions about the record. **It never publishes into the
-square**; it holds no authority there, and the topic it listens on is not its
+square**; it has no authority there, and the topic it listens on is not its
 own (below).
 
 Five things, and nothing else yet:
@@ -94,7 +94,7 @@ built for it.
 
 ### What the keeper will not do
 
-- **It does not put words in the square.** It holds no grant there and its code
+- **It does not put words in the square.** It asks for no grant there and its code
   has no publish path to it.
 - **It does not take a speaker's word for the news.** `stimulus` is attached
   by the *speaker's* harness, so it is a claim the speaker's node makes. The
@@ -274,9 +274,10 @@ which host, which station, which realm, which secret store.
 
 The image has two channels, and only a release moves `:latest`. A `v*` tag
 publishes its own version and then, once `attest` has signed and attested that
-digest, points `:latest` at it: that is the deploy channel, the one the dev
-fleet follows. A push to `main` publishes `:main` and `:<sha>`, the tip for
-trying, and nothing follows those, so a merge deploys nothing. The semver tags
+digest, points `:latest` at it. macula-fleet runs a signed release pinned by
+digest, and CI commits that pin, so a v* tag is the deploy. A push to `main`
+publishes `:main` and `:<sha>`, the tip for trying, and nothing follows
+those, so a merge deploys nothing. The semver tags
 stay published, so a host can be pinned back to a known one to roll back. A
 push that changes only documentation builds no image
 (`scripts/is_image_push.sh`).

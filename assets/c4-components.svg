@@ -147,8 +147,8 @@
 <rect class="b-ext" x="980" y="372" width="220" height="88" rx="10"/>
 <text class="t-name" x="996" y="400">macula-station</text>
 <text class="t-type" x="996" y="418">[pinned]</text>
-<text class="t-desc" x="996" y="442">carries the procedure,</text>
-<text class="t-desc" x="996" y="458">info and every fact</text>
+<text class="t-desc" x="996" y="442">carries the adverts</text>
+<text class="t-desc" x="996" y="458">and every fact</text>
 <rect class="b-ext" x="980" y="840" width="220" height="100" rx="10"/>
 <text class="t-name" x="996" y="868">Record readers</text>
 <text class="t-type" x="996" y="886">[subscribers]</text>
@@ -185,7 +185,7 @@
 <path class="edge" d="M980 148H932" marker-end="url(#a)"/>
 <text class="t-rel" x="944" y="142" text-anchor="end">claims</text>
 <path class="edge" d="M980 416H968V580H944" marker-end="url(#a)"/>
-<text class="t-rel" x="976" y="470">carries calls</text>
+<text class="t-rel" x="976" y="494">carries calls</text>
 <path class="edge" d="M232 1020H190" marker-end="url(#a)"/>
 <text class="t-rel" x="218" y="1012" text-anchor="middle">calls</text>
 <path class="edge" d="M404 1080V1120" marker-end="url(#a)"/>
