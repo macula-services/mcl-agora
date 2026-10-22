@@ -264,7 +264,7 @@ mcl service uses); the service tests hold the pins.
 | `MCL_COOKIE` | `mcl_agora` | Erlang cookie. |
 
 `/health` is a Unix socket inside the container (`/run/mcl/health.sock`), not a
-port: a service on `mcl_om` 0.39 takes no health port, so this one claims none.
+port: this one sets `health_socket`, so it claims no health port.
 
 `deploy/docker-compose.yml` runs it, and carries what the service knows about
 itself. If you deploy through something else, let that carry **placement**:
