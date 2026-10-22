@@ -7,7 +7,7 @@
 # get_posts_page is in memory and rebuilt from the store on boot, so a restart
 # loses nothing that was written down.
 #
-# NO HEALTH PORT. This service is on mcl_om 0.39, so /health is a Unix socket
+# NO HEALTH PORT. This service is on mcl_om 1.4, so /health is a Unix socket
 # and takes no port from the fleet's registry.
 
 # ⚠ THE TEAM IMAGE PAIR, PINNED BY DATED TAG AND DIGEST. macula-ci-otp is
