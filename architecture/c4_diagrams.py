@@ -197,7 +197,7 @@ def containers():
     s.element("b-sys", 260, 100, 480, 200, "mcl-agora service",
               "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.0]",
               ["One open procedure as mcl-agora/get_posts_page v1 (not sealed), and",
-               "mcl-om's mcl-agora/info (macula 15.6). Hears the square and the news",
+               "mcl-om's mcl-agora/info (macula 16). Hears the square and the news",
                "wire, from admitted nodes only (mcl_om:org_member/2); publishes",
                "agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:",
                "node identity, pinned dial, realm claim, the grant, /health on a socket.",
