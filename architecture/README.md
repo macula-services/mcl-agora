@@ -8,7 +8,7 @@
 
 **A keeper, not a speaker.** Everything a post *is* is decided by the speaker and by whoever attached its provenance; the keeper writes down what it heard, unchanged, and is honest about what it could and could not check. It never publishes into the square; it holds no authority there and its code has no publish path to it.
 
-Legend used in all three diagrams: the amber box is the element in scope, blue boxes are people, grey boxes are external, and dashed boundaries are deployment and grouping boundaries (the fleet box is a placement that is not yet made).
+Legend used in all three diagrams: the amber box is the element in scope, blue boxes are people, grey boxes are external, and dashed boundaries are deployment and grouping boundaries.
 
 ## Level 1: system context
 
@@ -40,7 +40,7 @@ Legend used in all three diagrams: the amber box is the element in scope, blue b
 | Identity key | Named volume `mcl-agora-secrets` at `/etc/mcl/secrets` | The node key mcl-om keeps at `identity.key`; the node id the realm admits and grants, which survives a container recreate |
 | posts read model | ETS, in memory (no volume) | The shape `get_posts_page` reads: `agora_posts` ordered by `{posted_at, post_id}` and `agora_posts_by_id`. Rebuilt from the event store on every boot; nothing durable of its own |
 
-**Placement (planned).** A fleet box running the image by digest pinned in macula-fleet and reconciled from there, with `/bulk0/mcl-agora` on its bulk drive and host networking (stations are reachable over IPv6 and a default bridge has none). The service's own compose file (`deploy/docker-compose.yml`) carries what the service knows about itself; which box, station, realm and digest belong to macula-fleet.
+**Placement.** The image runs on a fleet box by digest pinned in macula-fleet and reconciled from there, with `/bulk0/mcl-agora` on its bulk drive and host networking (stations are reachable over IPv6 and a default bridge has none). The service's own compose file (`deploy/docker-compose.yml`) carries what the service knows about itself; which box, station, realm and digest belong to macula-fleet.
 
 **What mcl-om gives it, and what it leaves.** From mcl-om: the node key on the identity volume, the pinned station dial (`MACULA_STATION_SEEDS` paired index for index with `MACULA_STATION_NODE_IDS`), the boot identity claim, capability adverts gated on the realm's grant, `mcl-agora/info`, `/health`, publishing (`mcl_om_pubsub`) and the subscription supervisor that restarts the square listener after a dropped subscription. mcl-om opens no store (mcl-om#10); this service declares its own through `event_store/0` and opens it before `mcl_om:boot/1`.
 
