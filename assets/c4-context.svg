@@ -103,7 +103,7 @@
 <text class="t-desc" x="536" y="542">who is the news sensor</text>
 <text class="t-rel" x="300" y="168" text-anchor="middle">publish; the keeper subscribes</text>
 <text class="t-rel" x="492" y="175" text-anchor="end">calls</text>
-<text class="t-rel" x="492" y="189" text-anchor="end">(not sealed)</text>
+<text class="t-rel" x="440" y="189" text-anchor="end">(not sealed)</text>
 <text class="t-rel" x="310" y="256" text-anchor="middle">get_posts_page</text>
 <text class="t-rel" x="640" y="256">announces each recording</text>
 <text class="t-rel" x="412" y="386" text-anchor="end">dials out,</text>

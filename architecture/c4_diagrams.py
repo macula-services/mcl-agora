@@ -164,7 +164,7 @@ def context():
 
     s.text("t-rel", 300, 168, "publish; the keeper subscribes", anchor="middle")
     s.text("t-rel", 492, 175, "calls", anchor="end")
-    s.text("t-rel", 492, 189, "(not sealed)", anchor="end")
+    s.text("t-rel", 440, 189, "(not sealed)", anchor="end")
     s.text("t-rel", 310, 256, "get_posts_page", anchor="middle")
     s.text("t-rel", 640, 256, "announces each recording")
     s.text("t-rel", 412, 386, "dials out,", anchor="end")
@@ -186,7 +186,7 @@ def containers():
 
     # Edges
     s.edge("M200 136H260")                     # macula-mcp
-    s.edge("M200 230H260")                     # the square
+    s.edge("M215 230H260")                     # the square
     s.edge("M200 316H260")                     # reader
     s.edge("M740 134H810")                     # station
     s.edge("M740 228H810")                     # realm
@@ -217,7 +217,7 @@ def containers():
 
     s.element("b-ext", 10, 96, 190, 80, "macula-mcp", "[MCP server]",
               ["outside the fleet"])
-    s.element("b-ext", 10, 190, 190, 80, "Square + news wire", "[speaker / sensor topics]",
+    s.element("b-ext", 10, 190, 205, 80, "Square + news wire", "[speaker / sensor topics]",
               ["posts, news_item_reported_v1"])
     s.element("b-ext", 10, 276, 190, 80, "Reader", "[mesh callers]",
               ["get_posts_page"])
@@ -295,17 +295,17 @@ def components():
               ["claim, provider grant, realm", "key; who is an admitted member"])
     s.element("b-ext", 980, 232, 220, 110, "The square", "[speaker-owned topics]",
               ["the minds publish", "agora_post_published_v1 here;", "admitted speakers only count"])
-    s.element("b-ext", 10, 248, 180, 88, "The news wire", "[mcl-news's topic]",
+    s.element("b-ext", 10, 248, 180, 104, "The news wire", "[mcl-news's topic]",
               ["news_item_reported_v1;", "admitted sensor only"])
-    s.element("b-ext", 980, 372, 220, 88, "macula-station", "[pinned]",
+    s.element("b-ext", 980, 372, 220, 104, "macula-station", "[pinned]",
               ["carries the adverts", "and every fact"])
     s.element("b-ext", 980, 840, 220, 100, "Record readers", "[subscribers]",
               ["follow agora_post_recorded_v1", "as the record grows"])
     s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data; /bulk0/mcl-agora on a node]", [])
 
     # Edges and labels
-    s.edge("M400 204V248"); s.text("t-rel", 408, 222, "subscriptions/0 starts the subscriber")
-    s.edge("M400 348V392"); s.text("t-rel", 408, 366, "a fact becomes a command")
+    s.edge("M222 204V248"); s.text("t-rel", 232, 222, "subscriptions/0 starts the subscriber")
+    s.edge("M222 348V392"); s.text("t-rel", 232, 366, "a fact becomes a command")
     s.edge("M552 436H596"); s.text("t-rel", 574, 452, "dispatch", anchor="middle")
     s.edge("M770 480V536"); s.text("t-rel", 778, 500, "one event per post;")
     s.text("t-rel", 778, 514, "a contradiction once")

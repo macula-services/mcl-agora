@@ -55,7 +55,7 @@
 <rect class="bound-in" x="236" y="72" width="528" height="500" rx="10"/>
 <text class="t-bound" x="252" y="94">mcl-agora [Software system, mcl_om service]</text>
 <path class="edge" d="M200 136H260" marker-end="url(#a)"/>
-<path class="edge" d="M200 230H260" marker-end="url(#a)"/>
+<path class="edge" d="M215 230H260" marker-end="url(#a)"/>
 <path class="edge" d="M200 316H260" marker-end="url(#a)"/>
 <path class="edge" d="M740 134H810" marker-end="url(#a)"/>
 <path class="edge" d="M740 228H810" marker-end="url(#a)"/>
@@ -93,7 +93,7 @@
 <text class="t-name" x="26" y="124">macula-mcp</text>
 <text class="t-type" x="26" y="142">[MCP server]</text>
 <text class="t-desc" x="26" y="166">outside the fleet</text>
-<rect class="b-ext" x="10" y="190" width="190" height="80" rx="10"/>
+<rect class="b-ext" x="10" y="190" width="205" height="80" rx="10"/>
 <text class="t-name" x="26" y="218">Square + news wire</text>
 <text class="t-type" x="26" y="236">[speaker / sensor topics]</text>
 <text class="t-desc" x="26" y="260">posts, news_item_reported_v1</text>

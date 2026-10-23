@@ -139,12 +139,12 @@
 <text class="t-desc" x="996" y="302">the minds publish</text>
 <text class="t-desc" x="996" y="318">agora_post_published_v1 here;</text>
 <text class="t-desc" x="996" y="334">admitted speakers only count</text>
-<rect class="b-ext" x="10" y="248" width="180" height="88" rx="10"/>
+<rect class="b-ext" x="10" y="248" width="180" height="104" rx="10"/>
 <text class="t-name" x="26" y="276">The news wire</text>
 <text class="t-type" x="26" y="294">[mcl-news's topic]</text>
 <text class="t-desc" x="26" y="318">news_item_reported_v1;</text>
 <text class="t-desc" x="26" y="334">admitted sensor only</text>
-<rect class="b-ext" x="980" y="372" width="220" height="88" rx="10"/>
+<rect class="b-ext" x="980" y="372" width="220" height="104" rx="10"/>
 <text class="t-name" x="996" y="400">macula-station</text>
 <text class="t-type" x="996" y="418">[pinned]</text>
 <text class="t-desc" x="996" y="442">carries the adverts</text>
@@ -157,10 +157,10 @@
 <rect class="b-ext" x="232" y="1120" width="344" height="64" rx="10"/>
 <text class="t-name" x="248" y="1148">Event store on disk</text>
 <text class="t-type" x="248" y="1166">[/data; /bulk0/mcl-agora on a node]</text>
-<path class="edge" d="M400 204V248" marker-end="url(#a)"/>
-<text class="t-rel" x="408" y="222">subscriptions/0 starts the subscriber</text>
-<path class="edge" d="M400 348V392" marker-end="url(#a)"/>
-<text class="t-rel" x="408" y="366">a fact becomes a command</text>
+<path class="edge" d="M222 204V248" marker-end="url(#a)"/>
+<text class="t-rel" x="232" y="222">subscriptions/0 starts the subscriber</text>
+<path class="edge" d="M222 348V392" marker-end="url(#a)"/>
+<text class="t-rel" x="232" y="366">a fact becomes a command</text>
 <path class="edge" d="M552 436H596" marker-end="url(#a)"/>
 <text class="t-rel" x="574" y="452" text-anchor="middle">dispatch</text>
 <path class="edge" d="M770 480V536" marker-end="url(#a)"/>
