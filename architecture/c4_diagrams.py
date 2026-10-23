@@ -164,7 +164,7 @@ def context():
 
     s.text("t-rel", 300, 168, "publish; the keeper subscribes", anchor="middle")
     s.text("t-rel", 492, 175, "calls", anchor="end")
-    s.text("t-rel", 440, 189, "(not sealed)", anchor="end")
+    s.text("t-rel", 492, 189, "(not sealed)", anchor="end")
     s.text("t-rel", 310, 256, "get_posts_page", anchor="middle")
     s.text("t-rel", 640, 256, "announces each recording")
     s.text("t-rel", 412, 386, "dials out,", anchor="end")
@@ -186,11 +186,11 @@ def containers():
 
     # Edges
     s.edge("M200 136H260")                     # macula-mcp
-    s.edge("M215 230H260")                     # the square
-    s.edge("M200 316H260")                     # reader
+    s.edge("M200 230H260")                     # the square
+    s.edge("M200 290H260")                     # reader
     s.edge("M740 134H810")                     # station
     s.edge("M740 228H810")                     # realm
-    s.edge("M740 310H810")                     # record readers
+    s.edge("M740 290H810")                     # record readers
     s.edge("M372 300V335")                     # event store
     s.edge("M627 300V335")                     # identity key
 
@@ -217,7 +217,7 @@ def containers():
 
     s.element("b-ext", 10, 96, 190, 80, "macula-mcp", "[MCP server]",
               ["outside the fleet"])
-    s.element("b-ext", 10, 190, 205, 80, "Square + news wire", "[speaker / sensor topics]",
+    s.element("b-ext", 10, 190, 190, 80, "Square + news wire", "[speaker / sensor topics]",
               ["posts, news_item_reported_v1"])
     s.element("b-ext", 10, 276, 190, 80, "Reader", "[mesh callers]",
               ["get_posts_page"])
@@ -229,11 +229,11 @@ def containers():
 
     s.text("t-rel", 230, 128, "calls", anchor="middle")
     s.text("t-rel", 230, 222, "subscribe", anchor="middle")
-    s.text("t-rel", 230, 308, "reads", anchor="middle")
+    s.text("t-rel", 230, 282, "reads", anchor="middle")
     s.text("t-rel", 10, 390, "all over the mesh, via the station")
     s.text("t-rel", 775, 126, "dials", anchor="middle")
     s.text("t-rel", 775, 220, "claims", anchor="middle")
-    s.text("t-rel", 736, 326, "announces", anchor="end")
+    s.text("t-rel", 736, 282, "announces", anchor="end")
     s.text("t-rel", 380, 325, "appends, replays")
     s.text("t-rel", 635, 325, "loads")
     s.write("c4-containers.svg")
@@ -304,8 +304,8 @@ def components():
     s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data; /bulk0/mcl-agora on a node]", [])
 
     # Edges and labels
-    s.edge("M222 204V248"); s.text("t-rel", 232, 222, "subscriptions/0 starts the subscriber")
-    s.edge("M222 348V392"); s.text("t-rel", 232, 366, "a fact becomes a command")
+    s.edge("M400 204V248"); s.text("t-rel", 408, 222, "subscriptions/0 starts the subscriber")
+    s.edge("M400 348V392"); s.text("t-rel", 408, 366, "a fact becomes a command")
     s.edge("M552 436H596"); s.text("t-rel", 574, 452, "dispatch", anchor="middle")
     s.edge("M770 480V536"); s.text("t-rel", 778, 500, "one event per post;")
     s.text("t-rel", 778, 514, "a contradiction once")
