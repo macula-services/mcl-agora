@@ -118,7 +118,7 @@
 <text class="t-rel" x="10" y="390">all over the mesh, via the station</text>
 <text class="t-rel" x="775" y="126" text-anchor="middle">dials</text>
 <text class="t-rel" x="775" y="220" text-anchor="middle">claims</text>
-<text class="t-rel" x="736" y="282" text-anchor="end">announces</text>
+<text class="t-rel" x="775" y="282" text-anchor="middle">announces</text>
 <text class="t-rel" x="380" y="325">appends, replays</text>
 <text class="t-rel" x="635" y="325">loads</text>
 </svg>

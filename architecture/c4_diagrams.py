@@ -163,8 +163,8 @@ def context():
               ["Boot claim and grant; its admission", "chain says who is a speaker and", "who is the news sensor"])
 
     s.text("t-rel", 300, 168, "publish; the keeper subscribes", anchor="middle")
-    s.text("t-rel", 492, 175, "calls", anchor="end")
-    s.text("t-rel", 492, 189, "(not sealed)", anchor="end")
+    s.text("t-rel", 508, 175, "calls", anchor="start")
+    s.text("t-rel", 508, 189, "(not sealed)", anchor="start")
     s.text("t-rel", 310, 256, "get_posts_page", anchor="middle")
     s.text("t-rel", 640, 256, "announces each recording")
     s.text("t-rel", 412, 386, "dials out,", anchor="end")
@@ -233,7 +233,7 @@ def containers():
     s.text("t-rel", 10, 390, "all over the mesh, via the station")
     s.text("t-rel", 775, 126, "dials", anchor="middle")
     s.text("t-rel", 775, 220, "claims", anchor="middle")
-    s.text("t-rel", 736, 282, "announces", anchor="end")
+    s.text("t-rel", 775, 282, "announces", anchor="middle")
     s.text("t-rel", 380, 325, "appends, replays")
     s.text("t-rel", 635, 325, "loads")
     s.write("c4-containers.svg")
@@ -304,8 +304,8 @@ def components():
     s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data; /bulk0/mcl-agora on a node]", [])
 
     # Edges and labels
-    s.edge("M400 204V248"); s.text("t-rel", 408, 222, "subscriptions/0 starts the subscriber")
-    s.edge("M400 348V392"); s.text("t-rel", 408, 366, "a fact becomes a command")
+    s.edge("M222 204V270H232"); s.text("t-rel", 236, 222, "subscriptions/0 starts the subscriber")
+    s.edge("M222 348V412H232"); s.text("t-rel", 236, 366, "a fact becomes a command")
     s.edge("M552 436H596"); s.text("t-rel", 574, 452, "dispatch", anchor="middle")
     s.edge("M770 480V536"); s.text("t-rel", 778, 500, "one event per post;")
     s.text("t-rel", 778, 514, "a contradiction once")
