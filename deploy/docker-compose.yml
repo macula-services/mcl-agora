@@ -44,7 +44,10 @@ services:
       # gigabytes and keep application data on /bulk0.
       - ${MCL_DATA:-/bulk0/mcl-agora}:/data
     labels:
-      # Only meaningful if you run watchtower yourself. Harmless otherwise.
+      # Only meaningful to an operator whose own tooling recreates a container
+      # when a new image lands; harmless to every other. Nothing in this
+      # repository's own deployment reads it: the reconciler replaces the
+      # container from a pinned digest, and no updater runs beside it.
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       # No default. A service that guesses its realm announces itself where

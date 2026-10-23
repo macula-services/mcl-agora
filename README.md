@@ -256,7 +256,7 @@ mcl service uses); the service tests hold the pins.
 | `MACULA_STATION_SEEDS` | required | Station hosts to dial, `host[:port]`, comma-separated. |
 | `MACULA_STATION_NODE_IDS` | required | The matching 64-hex station node ids, comma-separated, index-paired with the seeds. The dial is pinned (D5). |
 | `MCL_REALM_NAME` | required | The realm's name, as the fact topics carry it. At start, `sha256` of it must equal `MCL_REALM` or the node refuses to start. |
-| `MCL_DATA_DIR` | `/tmp/mcl_agora` | Where the event store lives. **Must be a mounted volume on a node** (`/bulk0` on the beams): the default is what a laptop wants, and a container without the mount loses its record on every recreate, which is the same as not keeping one. |
+| `MCL_DATA_DIR` | `/tmp/mcl_agora` | Where the event store lives. **Must be a mounted volume on a node** (`/bulk0` on a fleet node): the default is what a laptop wants, and a container without the mount loses its record on every recreate, which is the same as not keeping one. |
 | `MCL_SERVICE_NAME` | `mcl-agora` | The service label on the claim the realm's operator sees at boot. |
 | `MCL_BOX` | empty | The host label on that claim. Set by whatever deploys the service. |
 | `MCL_NODE_NAME` | `mcl_agora` | Erlang node name. |
