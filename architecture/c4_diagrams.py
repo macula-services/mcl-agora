@@ -163,8 +163,8 @@ def context():
               ["Boot claim and grant; its admission", "chain says who is a speaker and", "who is the news sensor"])
 
     s.text("t-rel", 300, 168, "publish; the keeper subscribes", anchor="middle")
-    s.text("t-rel", 492, 175, "calls", anchor="end")
-    s.text("t-rel", 492, 189, "(not sealed)", anchor="end")
+    s.text("t-rel", 508, 175, "calls", anchor="start")
+    s.text("t-rel", 508, 189, "(not sealed)", anchor="start")
     s.text("t-rel", 310, 256, "get_posts_page", anchor="middle")
     s.text("t-rel", 640, 256, "announces each recording")
     s.text("t-rel", 412, 386, "dials out,", anchor="end")
@@ -187,30 +187,33 @@ def containers():
     # Edges
     s.edge("M200 136H260")                     # macula-mcp
     s.edge("M200 230H260")                     # the square
-    s.edge("M200 316H260")                     # reader
+    s.edge("M200 290H260")                     # reader
     s.edge("M740 134H810")                     # station
     s.edge("M740 228H810")                     # realm
-    s.edge("M740 310H810")                     # record readers
+    s.edge("M740 290H810")                     # record readers
     s.edge("M372 300V335")                     # event store
     s.edge("M627 300V335")                     # identity key
 
     s.element("b-sys", 260, 100, 480, 200, "mcl-agora service",
-              "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.0]",
-              ["One open procedure as mcl-agora/get_posts_page v1 (not sealed), and",
-               "mcl-om's mcl-agora/info (macula 16). Hears the square and the news",
-               "wire, from admitted nodes only (mcl_om:org_member/2); publishes",
-               "agora_post_recorded_v1 and agora_post_conflict_detected_v1. From mcl-om:",
-               "node identity, pinned dial, realm claim, the grant, /health on a socket.",
-               "Its own reckon-db store opens before mcl-om's boot; the read model and",
-               "the memory of the news are in memory, the first rebuilt on every boot."])
+              "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.4]",
+              ["mcl-agora/get_posts_page is its own procedure, and the only one; v1, not",
+               "sealed. mcl-om adds mcl-agora/info and mcl-agora/get_limits, both open;",
+               "capabilities/0 is the list. Hears the square and the news wire, from admitted",
+               "nodes only (mcl_om:org_member/2); publishes agora_post_recorded_v1 and",
+               "agora_post_conflict_detected_v1. From mcl-om: node identity, pinned dial,",
+               "realm claim, the grants, /health. Its own reckon-db store opens before",
+               "mcl-om's boot; the read model and the news memory are in memory."])
 
-    s.element("b-cmp", 260, 335, 225, 120, "Event store", "[bind mount: /data]",
-              ["/bulk0/mcl-agora on a node.", "mcl_agora_store under MCL_DATA_DIR:", "the event log that IS the record,", "replayed into the read model on boot"])
-    s.element("b-cmp", 515, 335, 225, 120, "Identity key", "[mcl-agora-secrets]",
-              ["/etc/mcl/secrets:", "identity.key, the node id the", "realm admits and grants"])
-    s.rect("b-cmp", 260, 480, 480, 56)
-    s.text("t-code t-small", 276, 504, "posts read model")
-    s.text("t-desc", 276, 522, "ETS, in memory: agora_posts (by posted_at) and agora_posts_by_id. Rebuilt on boot.")
+    s.element("b-cmp", 250, 335, 245, 152, "Event store", "[bind mount: /data]",
+              ["/bulk0/mcl-agora on a node.", "mcl_agora_store under",
+               "MCL_DATA_DIR: the event log", "that IS the record, replayed",
+               "into the read model on boot"])
+    s.element("b-cmp", 505, 335, 235, 152, "Identity key", "[mcl-agora-secrets]",
+              ["/etc/mcl/secrets:", "identity.key, the node id the",
+               "realm admits and grants"])
+    s.rect("b-cmp", 260, 500, 480, 56)
+    s.text("t-code t-small", 276, 524, "posts read model")
+    s.text("t-desc", 276, 542, "ETS: agora_posts (by posted_at) and agora_posts_by_id. Rebuilt on boot.")
 
     s.element("b-ext", 10, 96, 190, 80, "macula-mcp", "[MCP server]",
               ["outside the fleet"])
@@ -226,11 +229,11 @@ def containers():
 
     s.text("t-rel", 230, 128, "calls", anchor="middle")
     s.text("t-rel", 230, 222, "subscribe", anchor="middle")
-    s.text("t-rel", 230, 308, "reads", anchor="middle")
+    s.text("t-rel", 230, 282, "reads", anchor="middle")
     s.text("t-rel", 10, 390, "all over the mesh, via the station")
     s.text("t-rel", 775, 126, "dials", anchor="middle")
     s.text("t-rel", 775, 220, "claims", anchor="middle")
-    s.text("t-rel", 775, 302, "announces", anchor="middle")
+    s.text("t-rel", 775, 282, "announces", anchor="middle")
     s.text("t-rel", 380, 325, "appends, replays")
     s.text("t-rel", 635, 325, "loads")
     s.write("c4-containers.svg")
@@ -253,7 +256,7 @@ def components():
                 ["Opens the store and its evoq subscription,", "then mcl_om:boot/1."], small=True)
 
     # CMD: the input, the command, the aggregate, the emitter.
-    s.bound("bound-in", 216, 216, 728, 132, "apps/guide_agora_post_lifecycle [CMD: hears the square and the news, records one post, says it out loud]")
+    s.bound("bound-in", 216, 216, 728, 132, "apps/guide_agora_post_lifecycle [CMD: hears, records, says it out loud]")
     s.component("b-cmp", 232, 248, 344, 88, "news listener + heard_news_items", "[macula_subscriber, bounded ETS]",
                 ["Remembers what an admitted mcl-news", "node reported: a day, at most 5,000."], small=True)
     s.component("b-cmp", 588, 248, 356, 88, "square listener + agora_post_fact", "[macula_subscriber]",
@@ -292,17 +295,17 @@ def components():
               ["claim, provider grant, realm", "key; who is an admitted member"])
     s.element("b-ext", 980, 232, 220, 110, "The square", "[speaker-owned topics]",
               ["the minds publish", "agora_post_published_v1 here;", "admitted speakers only count"])
-    s.element("b-ext", 10, 248, 180, 88, "The news wire", "[mcl-news's topic]",
+    s.element("b-ext", 10, 248, 180, 104, "The news wire", "[mcl-news's topic]",
               ["news_item_reported_v1;", "admitted sensor only"])
-    s.element("b-ext", 980, 372, 220, 88, "macula-station", "[pinned]",
-              ["carries the procedure,", "info and every fact"])
+    s.element("b-ext", 980, 372, 220, 104, "macula-station", "[pinned]",
+              ["carries the adverts", "and every fact"])
     s.element("b-ext", 980, 840, 220, 100, "Record readers", "[subscribers]",
               ["follow agora_post_recorded_v1", "as the record grows"])
-    s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data, a bind mount; /bulk0/mcl-agora on a node]", [])
+    s.element("b-ext", 232, 1120, 344, 64, "Event store on disk", "[/data; /bulk0/mcl-agora on a node]", [])
 
     # Edges and labels
-    s.edge("M400 204V248"); s.text("t-rel", 408, 222, "subscriptions/0 starts the subscriber")
-    s.edge("M400 348V392"); s.text("t-rel", 408, 366, "a fact becomes a command")
+    s.edge("M222 204V270H232"); s.text("t-rel", 236, 222, "subscriptions/0 starts the subscriber")
+    s.edge("M222 348V412H232"); s.text("t-rel", 236, 366, "a fact becomes a command")
     s.edge("M552 436H596"); s.text("t-rel", 574, 452, "dispatch", anchor="middle")
     s.edge("M770 480V536"); s.text("t-rel", 778, 500, "one event per post;")
     s.text("t-rel", 778, 514, "a contradiction once")
@@ -313,10 +316,10 @@ def components():
     s.edge("M404 776V808"); s.text("t-rel", 412, 786, "writes")
     s.edge("M404 928V960"); s.text("t-rel", 412, 938, "reads")
     s.edge("M932 718H968V890H980"); s.text("t-rel", 976, 800, "recorded, conflict_detected")
-    s.edge("M980 287H944"); s.text("t-rel", 962, 279, "hears", anchor="middle")
+    s.edge("M980 287H944"); s.text("t-rel", 944, 281, "hears", anchor="end")
     s.edge("M190 292H232"); s.text("t-rel", 211, 284, "hears", anchor="middle")
-    s.edge("M980 148H932"); s.text("t-rel", 956, 140, "claims", anchor="middle")
-    s.edge("M980 416H968V580H944"); s.text("t-rel", 976, 470, "carries calls")
+    s.edge("M980 148H932"); s.text("t-rel", 944, 142, "claims", anchor="end")
+    s.edge("M980 416H968V580H944"); s.text("t-rel", 976, 494, "carries calls")
     s.edge("M232 1020H190"); s.text("t-rel", 218, 1012, "calls", anchor="middle")
     s.edge("M404 1080V1120"); s.text("t-rel", 412, 1096, "the record")
     s.text("t-rel", 20, 1200, "0.2.0 (W2): admitted speakers only, every card checked against the news, contradictions written down. W4 threads and synthesis, W6 search and the archive: not drawn.")

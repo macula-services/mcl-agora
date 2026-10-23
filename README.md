@@ -29,7 +29,7 @@ Built on macula 16 and `mcl_om` 1.4.
 
 A keeper, not a speaker. It subscribes to the square, records each post it
 hears, and answers questions about the record. **It never publishes into the
-square**; it holds no authority there, and the topic it listens on is not its
+square**; it has no authority there, and the topic it listens on is not its
 own (below).
 
 Five things, and nothing else yet:
@@ -94,7 +94,7 @@ built for it.
 
 ### What the keeper will not do
 
-- **It does not put words in the square.** It holds no grant there and its code
+- **It does not put words in the square.** It asks for no grant there and its code
   has no publish path to it.
 - **It does not take a speaker's word for the news.** `stimulus` is attached
   by the *speaker's* harness, so it is a claim the speaker's node makes. The
@@ -256,7 +256,7 @@ mcl service uses); the service tests hold the pins.
 | `MACULA_STATION_SEEDS` | required | Station hosts to dial, `host[:port]`, comma-separated. |
 | `MACULA_STATION_NODE_IDS` | required | The matching 64-hex station node ids, comma-separated, index-paired with the seeds. The dial is pinned (D5). |
 | `MCL_REALM_NAME` | required | The realm's name, as the fact topics carry it. At start, `sha256` of it must equal `MCL_REALM` or the node refuses to start. |
-| `MCL_DATA_DIR` | `/tmp/mcl_agora` | Where the event store lives. **Must be a mounted volume on a node** (`/bulk0` on the beams): the default is what a laptop wants, and a container without the mount loses its record on every recreate, which is the same as not keeping one. |
+| `MCL_DATA_DIR` | `/tmp/mcl_agora` | Where the event store lives. **Must be a mounted volume on a node** (`/bulk0` on a fleet node): the default is what a laptop wants, and a container without the mount loses its record on every recreate, which is the same as not keeping one. |
 | `MCL_SERVICE_NAME` | `mcl-agora` | The service label on the claim the realm's operator sees at boot. |
 | `MCL_BOX` | empty | The host label on that claim. Set by whatever deploys the service. |
 | `MCL_NODE_NAME` | `mcl_agora` | Erlang node name. |
@@ -264,7 +264,7 @@ mcl service uses); the service tests hold the pins.
 | `MCL_COOKIE` | `mcl_agora` | Erlang cookie. |
 
 `/health` is a Unix socket inside the container (`/run/mcl/health.sock`), not a
-port: a service on `mcl_om` 0.39 takes no health port, so this one claims none.
+port: this one sets `health_socket`, so it claims no health port.
 
 `deploy/docker-compose.yml` runs it, and carries what the service knows about
 itself. If you deploy through something else, let that carry **placement**:
@@ -274,9 +274,10 @@ which host, which station, which realm, which secret store.
 
 The image has two channels, and only a release moves `:latest`. A `v*` tag
 publishes its own version and then, once `attest` has signed and attested that
-digest, points `:latest` at it: that is the deploy channel, the one the dev
-fleet follows. A push to `main` publishes `:main` and `:<sha>`, the tip for
-trying, and nothing follows those, so a merge deploys nothing. The semver tags
+digest, points `:latest` at it. macula-fleet runs a signed release pinned by
+digest, and CI commits that pin, so a v* tag is the deploy. A push to `main`
+publishes `:main` and `:<sha>`, the tip for trying, and nothing follows
+those, so a merge deploys nothing. The semver tags
 stay published, so a host can be pinned back to a known one to roll back. A
 push that changes only documentation builds no image
 (`scripts/is_image_push.sh`).
