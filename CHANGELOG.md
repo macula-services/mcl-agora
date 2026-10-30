@@ -18,11 +18,12 @@ mcl_om 1.6 and macula 18.
   | who may CALL a capability with a handler | unspecified = served open | required; `get_posts_page` declares `auth => open` |
   | who may DELIVER to a subscription | unspecified = accepted | required; the square and the news wire both declare `sources => members` |
 
-  `auth => open` is what the procedure was before the rule existed — the link
-  ran no gate — and the record is meant to be readable, so no caller's reach
-  changes; the caller is identified on the link either way. `{callers,
-  members}` would narrow it to the realm and is the move to make if the square
-  ever stops being readable by anyone who can reach it.
+  `get_posts_page` was open before; macula 18 makes it an explicit
+  declaration. Nothing about who can call it changes in this release — the
+  link ran no gate before, and the record is meant to be readable — and the
+  caller is identified on the link either way. `{callers, members}` would
+  narrow it to the realm and is the move to make if the square ever stops
+  being readable by anyone who can reach it.
 
   `sources => members` is any publisher the realm admitted: the square is
   mcl-spartan's and the news wire mcl-news's, both realm members. Not
