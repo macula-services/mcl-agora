@@ -1,10 +1,39 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 (2026-10-30)
+
+Refs macula-services/mcl-om#42, the migration of the mcl-* services onto
+mcl_om 1.6 and macula 18.
 
 ### Changed
 
-- **The base library is macula 16** (macula-codebase-checks#4). The floor moves
+- **On mcl_om 1.6 and macula 18, and the keeper now writes down both caller
+  rules.** `mcl_om` moves to `~> 1.6` and `macula` to `~> 18.0`; 18 still
+  speaks wire 1.0, so this keeper still speaks to every wire 1.0 box. What it
+  brings is two refusals at boot, not two defaults
+  (macula-io/macula#147), and this release satisfies both:
+
+  | Rule | Before | Now |
+  | --- | --- | --- |
+  | who may CALL a capability with a handler | unspecified = served open | required; `get_posts_page` declares `auth => open` |
+  | who may DELIVER to a subscription | unspecified = accepted | required; the square and the news wire both declare `sources => members` |
+
+  `auth => open` is what the procedure was before the rule existed — the link
+  ran no gate — and the record is meant to be readable, so no caller's reach
+  changes; the caller is identified on the link either way. `{callers,
+  members}` would narrow it to the realm and is the move to make if the square
+  ever stops being readable by anyone who can reach it.
+
+  `sources => members` is any publisher the realm admitted: the square is
+  mcl-spartan's and the news wire mcl-news's, both realm members. Not
+  `{org, _}`, because nothing in this mesh presents an org key yet, and not
+  `{open, _}`, which would let a publisher from outside the realm put a post
+  into the record the keeper exists to hold. A subscription that names no
+  source is refused, naming the topic, before the service starts.
+
+- **The base library is macula 16** (macula-codebase-checks#4), landed in main
+  before this release and shipped by it; the versions below are the ones it
+  landed with, and the entry above supersedes them. The floor moves
   `~> 15.6` to `~> 16.0`, and `mcl_om` from `~> 1.0` to `~> 1.4`, the mcl_om
   whose own base is macula 16. 16.0 keeps wire 1.0, so this service still speaks
   to every wire 1.0 box; what it brings is the revocation bound (macula#118):

@@ -1,6 +1,6 @@
 {application, project_agora_posts, [
     {description, "PRJ: the posts read model for mcl-agora"},
-    {vsn, "0.4.0"},
+    {vsn, "0.5.0"},
     {registered, [project_agora_posts_sup]},
     {mod, {project_agora_posts_app, []}},
     {applications, [kernel, stdlib, evoq, reckon_evoq]},

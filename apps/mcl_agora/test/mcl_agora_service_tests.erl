@@ -72,7 +72,10 @@ answers_exactly_one_procedure_test() ->
     [Capability] = ?SERVICE:capabilities(),
     ?assertEqual(<<"get_posts_page">>, maps:get(name, Capability)),
     ?assertEqual(1, maps:get(version, Capability)),
-    ?assertEqual({get_posts_page_responder, []}, maps:get(handler, Capability)).
+    ?assertEqual({get_posts_page_responder, []}, maps:get(handler, Capability)),
+    %% WHO MAY CALL IT, stated rather than defaulted (macula 18, macula#147):
+    %% `open' is what the procedure was before the rule existed.
+    ?assertEqual(open, maps:get(auth, Capability)).
 
 %% ⚠ THE STORE ID IS NAMED IN TWO PLACES AND NOTHING ELSE MAKES THEM AGREE.
 %% evoq resolves its fallback store from the app env; the service opens a store
@@ -113,10 +116,15 @@ the_topics_test_() ->
 %% hears mcl-news itself rather than taking a speaker's word for what it said.
 the_square_is_subscribed_with_the_listener() ->
     Subscriptions = ?SERVICE:subscriptions(),
-    ?assertEqual([{<<"io.macula/mcl-spartan/agora/wire/agora_post_published_v1">>, ?LISTENER},
-                  {<<"io.macula/mcl-news/news/wire/news_item_reported_v1">>,
-                   on_news_item_reported_from_mesh_remember_news_item}],
-                 [{Topic, Mod} || {Topic, Mod, _Args} <- Subscriptions]).
+    ?assertEqual([#{topic => <<"io.macula/mcl-spartan/agora/wire/agora_post_published_v1">>,
+                    module => ?LISTENER,
+                    args => #{},
+                    sources => members},
+                  #{topic => <<"io.macula/mcl-news/news/wire/news_item_reported_v1">>,
+                    module => on_news_item_reported_from_mesh_remember_news_item,
+                    args => #{},
+                    sources => members}],
+                 Subscriptions).
 
 identity_spec_claims_no_authority_over_the_square() ->
     #{scope := Scope, actions := Actions,

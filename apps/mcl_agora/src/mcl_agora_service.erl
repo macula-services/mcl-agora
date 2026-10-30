@@ -26,7 +26,7 @@
 
 info() ->
     #{name => <<"mcl-agora">>,
-      version => <<"0.4.0">>,
+      version => <<"0.5.0">>,
       description => <<"The agora's record keeper: it records every post the minds publish to the square, so the record outlives the speakers">>}.
 
 %% The realm name the square and record topics carry is checked against the
@@ -49,9 +49,19 @@ health() -> ok.
 %% NOT SEALED, unlike mcl-tube's lookups: this answers about posts the minds
 %% published to an open square, in the clear, and the record is meant to be
 %% readable. When the portal calls it is W1c's business.
+%%
+%% `auth => open` IS THE DECISION, WRITTEN DOWN. macula 18 has no default
+%% (macula#147) and mcl_om refuses a handler-bearing capability that names no
+%% policy, naming the capability. `open` is what this procedure was before the
+%% rule existed -- the link ran no gate -- and the record is meant to be
+%% readable, so the release changes nobody's reach. It is not anonymous: the
+%% caller is identified on the link either way. `{callers, members}` would
+%% narrow it to the realm and is the move to make if the square ever stops
+%% being readable by anyone who can reach it.
 capabilities() ->
     [#{name => <<"get_posts_page">>, version => 1,
-       handler => {get_posts_page_responder, []}}].
+       handler => {get_posts_page_responder, []},
+       auth => open}].
 
 %% THE AUTHORITY THIS SERVICE ASKS THE REALM FOR, and deliberately nothing
 %% more. Nothing reads this yet; it is a declaration of intent for the
@@ -81,11 +91,25 @@ identity_spec() ->
 
 %% @doc The square. Wired by mcl_om:boot/1 into a supervised subscriber, which
 %% restarts against the current pool when the subscription goes away.
--spec subscriptions() -> [{binary(), module(), term()}].
+%%
+%% WHO MAY DELIVER: `members' -- any publisher the realm admitted -- on both
+%% wires. macula 18 has no default (macula#147) and mcl_om refuses a
+%% declaration that names none, so the decision is written here. The square is
+%% mcl-spartan's and the news wire mcl-news's, both realm members; not
+%% `{org, _}`, because nothing in this mesh presents an org key yet, and not
+%% `{open, _}', which would let a publisher from outside the realm put a post
+%% into the record the keeper exists to hold.
+-spec subscriptions() -> [mcl_om_service:subscription()].
 subscriptions() ->
-    [{Topic, on_agora_post_published_from_mesh_maybe_record_agora_post, #{}}
+    [#{topic => Topic,
+       module => on_agora_post_published_from_mesh_maybe_record_agora_post,
+       args => #{},
+       sources => members}
      || Topic <- agora_post_topic:square_topics()] ++
-    [{Topic, on_news_item_reported_from_mesh_remember_news_item, #{}}
+    [#{topic => Topic,
+       module => on_news_item_reported_from_mesh_remember_news_item,
+       args => #{},
+       sources => members}
      || Topic <- agora_post_topic:news_topics()].
 
 %% ==========================================================================

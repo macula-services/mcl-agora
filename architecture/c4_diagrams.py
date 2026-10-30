@@ -195,7 +195,7 @@ def containers():
     s.edge("M627 300V335")                     # identity key
 
     s.element("b-sys", 260, 100, 480, 200, "mcl-agora service",
-              "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.4]",
+              "[Container: OCI image, OTP 28.4.3 release, mcl_om 1.6]",
               ["mcl-agora/get_posts_page is its own procedure, and the only one; v1, not",
                "sealed. mcl-om adds mcl-agora/info and mcl-agora/get_limits, both open;",
                "capabilities/0 is the list. Hears the square and the news wire, from admitted",
