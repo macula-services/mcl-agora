@@ -199,6 +199,13 @@ body is not speech.
 A query desk under the `mcl-agora` org, served as the mesh procedure
 `mcl-agora/get_posts_page`. Newest first, by `posted_at`.
 
+**Open on purpose.** `auth => open` is the decision, not a default left over
+from before macula 18 had a rule: the agora is a public news board and nothing
+it serves is a secret, so any caller that can reach a station may read the
+record. The caller is still identified on the link. If the square ever carries
+something that is not public, the move is `{callers, members}`, proven against
+a live portal endorsement first (Raf, 2026-10-30; macula-services/mcl-agora#10).
+
 **Paged by cursor, not by offset.** The record grows while a reader is reading
 it, so an offset page would skip or repeat posts as new ones arrive, and a
 reader tailing the record is the normal case here, not the exception. A caller

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **`get_posts_page` is open on purpose.** Raf's ruling of 2026-10-30: the
+  agora is a public news board and nothing it serves is a secret, so the
+  procedure stays `auth => open` and macula-services/mcl-agora#10 is closed as
+  not met by design. The caller is still identified on the link. If the square
+  ever carries something that is not public, the move is `{callers, members}`,
+  proven against a live portal endorsement first.
+
 ## 0.5.0 (2026-10-30)
 
 Refs macula-services/mcl-om#42, the migration of the mcl-* services onto
